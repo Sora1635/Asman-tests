@@ -60,6 +60,17 @@
         </div>
     </div>
 
+    <!-- Модальное окно -->
+    <div class="modal" id="modal" style="display: none;">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <div class="modal-buttons">
+                <button id="modal-ok" class="modal-btn">OK</button>
+                <button id="modal-cancel" class="modal-btn modal-cancel" style="display: none;">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let serverTests = [];
         let currentTest = null;
@@ -72,6 +83,39 @@
         // Настройки
         const allowSkipQuestions = false; // Запретить переход без сохранения ответа
         const allowOverwriteAnswers = false; // Запретить пересохранение ответов
+        const imagePath = './images/'; // Путь к папке с изображениями
+
+        // Модальное окно
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+        const modalOk = document.getElementById('modal-ok');
+        const modalCancel = document.getElementById('modal-cancel');
+
+        function showModal(message, showCancel = false, onOk = () => {}, onCancel = () => {}) {
+            modalMessage.textContent = message;
+            modalCancel.style.display = showCancel ? 'inline-flex' : 'none';
+            modal.style.display = 'flex';
+            modalOk.onclick = () => {
+                modal.style.display = 'none';
+                onOk();
+            };
+            modalCancel.onclick = () => {
+                modal.style.display = 'none';
+                onCancel();
+            };
+            return new Promise((resolve) => {
+                modalOk.onclick = () => {
+                    modal.style.display = 'none';
+                    onOk();
+                    resolve(true);
+                };
+                modalCancel.onclick = () => {
+                    modal.style.display = 'none';
+                    onCancel();
+                    resolve(false);
+                };
+            });
+        }
 
         // Переключение темы
         function toggleTheme() {
@@ -148,9 +192,9 @@
             questionNumberDiv.textContent = `Вопрос ${currentQuestion + 1} из ${totalQuestions}`;
             questionNumberDiv.classList.toggle('answered', answers[currentQuestion] !== null);
             questionDiv.innerHTML = '';
-            if (question.text.match(/\.(jpg|png|gif)$/)) {
+            if (question.text.match(/\.(jpg|jpeg|png|gif)$/i)) {
                 const img = document.createElement('img');
-                img.src = question.text;
+                img.src = imagePath + question.text;
                 img.className = 'question-image';
                 questionDiv.appendChild(img);
             } else {
@@ -175,7 +219,7 @@
                 input.type = 'text';
                 input.id = 'text-answer';
                 input.value = answers[currentQuestion] || '';
-                input.setAttribute('autocomplete', 'off'); // Отключение автозаполнения
+                input.setAttribute('autocomplete', 'off');
                 questionDiv.appendChild(input);
                 const p = document.createElement('p');
                 p.textContent = question.instruction;
@@ -191,7 +235,6 @@
                 saveButton.disabled = false;
                 saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
             }
-            // Управление видимостью кнопок навигации
             const prevButton = document.querySelector('.prev-btn');
             const nextButton = document.querySelector('.next-btn');
             prevButton.style.display = currentQuestion === 0 ? 'none' : 'inline-flex';
@@ -228,25 +271,25 @@
                     document.getElementById('total').textContent = totalQuestions;
                     const percentage = Math.round((score / totalQuestions) * 100);
                     document.getElementById('percentage').textContent = percentage + '%';
-                    alert('Время теста истекло!');
+                    showModal('Время теста истекло!');
                 }
             }, 1000);
         }
 
         // Сохранение ответа
-        function saveAnswer() {
+        async function saveAnswer() {
             const question = currentTest.questions[currentQuestion];
             if (question.type === 'multiple') {
                 const selected = document.querySelector('input[name="answer"]:checked');
                 if (!selected) {
-                    alert('Пожалуйста, выберите ответ!');
+                    await showModal('Пожалуйста, выберите ответ!');
                     return;
                 }
                 answers[currentQuestion] = parseInt(selected.value);
             } else {
                 const answer = document.getElementById('text-answer').value;
                 if (!answer.trim()) {
-                    alert('Пожалуйста, введите ответ!');
+                    await showModal('Пожалуйста, введите ответ!');
                     return;
                 }
                 answers[currentQuestion] = answer;
@@ -264,15 +307,19 @@
         }
 
         // Переход к следующему вопросу
-        function nextQuestion() {
+        async function nextQuestion() {
             if (answers[currentQuestion] === null) {
                 if (!allowSkipQuestions) {
-                    alert('Вы не сохранили ответ. Пожалуйста, сохраните ответ перед переходом!');
+                    await showModal('Вы не сохранили ответ. Пожалуйста, сохраните ответ перед переходом!');
                     return;
                 } else {
-                    const confirmAction = confirm('Вы не сохранили ответ. Хотите сохранить перед переходом? Нажмите "OK" для сохранения, "Отмена" для перехода без сохранения.');
+                    const confirmAction = await showModal(
+                        'Вы не сохранили ответ. Хотите сохранить перед переходом?',
+                        true,
+                        () => saveAnswer(),
+                        () => {}
+                    );
                     if (confirmAction) {
-                        saveAnswer();
                         return;
                     }
                 }
@@ -287,10 +334,28 @@
         }
 
         // Завершение тестирования
-        function finishTest() {
-            const confirmation = prompt('Введите "finish", чтобы подтвердить завершение теста');
-            if (confirmation && confirmation.toLowerCase() === 'finish') {
-                // Сохранение ответа на последнем вопросе, если он выбран
+        async function finishTest() {
+            const confirmation = await new Promise((resolve) => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'finish-input';
+                input.setAttribute('autocomplete', 'off');
+                showModal(
+                    'Введите "finish", чтобы подтвердить завершение теста',
+                    true,
+                    () => {
+                        if (input.value.toLowerCase() === 'finish') {
+                            resolve(true);
+                        } else {
+                            showModal('Неверный ввод. Завершение теста отменено!');
+                            resolve(false);
+                        }
+                    },
+                    () => resolve(false)
+                );
+                modalMessage.appendChild(input);
+            });
+            if (confirmation) {
                 if (currentQuestion === totalQuestions - 1 && answers[currentQuestion] === null) {
                     const question = currentTest.questions[currentQuestion];
                     if (question.type === 'multiple') {
@@ -313,8 +378,6 @@
                 document.getElementById('total').textContent = totalQuestions;
                 const percentage = Math.round((score / totalQuestions) * 100);
                 document.getElementById('percentage').textContent = percentage + '%';
-            } else {
-                alert('Завершение теста отменено');
             }
         }
 
