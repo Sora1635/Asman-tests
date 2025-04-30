@@ -1,23 +1,28 @@
 /* Переменные для цветовой палитры */
 :root {
-    --primary: #1e90ff;
-    --primary-dark: #1565c0;
-    --accent: #00b7eb;
-    --background: #e3f2fd;
-    --text: #1a237e;
-    --card-bg: #ffffff;
+    --primary: #2196f3; /* Яркий синий */
+    --primary-dark: #1565c0; /* Темный синий */
+    --accent: #26c6da; /* Бирюзовый */
+    --background: #e3f2fd; /* Светлый голубой фон */
+    --text: #0d47a1; /* Темно-синий текст */
+    --card-bg: #ffffff; /* Белый фон карточек */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    --error: #d32f2f;
-    --success: #2e7d32;
+    --error: #d32f2f; /* Красный для ошибок */
+    --success: #2e7d32; /* Зеленый для успеха */
+    --answered: #4caf50; /* Зеленый для отвеченных вопросов */
     --border-radius: 16px;
     --transition: all 0.3s ease;
 }
 
 .dark {
-    --background: #0d1b2a;
-    --text: #e0e0e0;
-    --card-bg: #1b263b;
+    --primary: #64b5f6; /* Светлый синий */
+    --primary-dark: #90caf9; /* Очень светлый синий */
+    --accent: #4dd0e1; /* Светлый бирюзовый */
+    --background: #0d1b2a; /* Темный фон */
+    --text: #e0e0e0; /* Светлый текст */
+    --card-bg: #1b263b; /* Темный фон карточек */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    --answered: #81c784; /* Светлый зеленый */
 }
 
 /* Общие стили */
@@ -44,8 +49,7 @@ body {
 /* Шапка */
 header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
     padding: 16px 24px;
     background: var(--card-bg);
     box-shadow: var(--shadow);
@@ -53,20 +57,6 @@ header {
     top: 0;
     z-index: 1000;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
-}
-
-nav a {
-    margin: 0 16px;
-    text-decoration: none;
-    color: var(--primary);
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: var(--transition);
-}
-
-nav a:hover {
-    color: var(--primary-dark);
-    transform: translateY(-2px);
 }
 
 .theme-toggle {
@@ -101,17 +91,41 @@ h1 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h3 {
-    font-size: 1.5rem;
-    margin: 16px 0;
-    color: var(--primary);
-}
-
 p {
     font-size: 1.2rem;
     line-height: 1.6;
     text-align: center;
     margin-bottom: 24px;
+    color: var(--text);
+}
+
+/* Кнопки на главной */
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.action-btn {
+    padding: 15px 30px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.action-btn:hover {
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Карточки */
@@ -151,36 +165,86 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.delete-btn {
-    background: var(--error);
+button:disabled {
+    background: #b0bec5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-.delete-btn:hover {
-    background: #b71c1c;
+/* Навигационные кнопки */
+.nav-btn {
+    background: linear-gradient(45deg, var(--accent), var(--primary));
+}
+
+.nav-btn:hover {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+}
+
+/* Кнопка завершения */
+.finish-btn {
+    background: linear-gradient(45deg, var(--success), var(--accent));
+}
+
+.finish-btn:hover {
+    background: linear-gradient(45deg, var(--success), var(--primary));
+}
+
+/* Прогресс-бар */
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+/* Номер вопроса */
+.question-number {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.question-number.answered {
+    color: var(--answered);
+}
+
+/* Навигация */
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
 }
 
 /* Поля ввода */
-input, textarea, select {
+input, textarea {
     width: 100%;
     padding: 12px;
     margin: 12px 0;
-    border: 2px solid #b0bec5;
+    border: 2px solid var(--primary-dark);
     border-radius: var(--border-radius);
-    background: #f5f5f5;
+    background: var(--card-bg);
     color: var(--text);
     font-size: 1rem;
     transition: var(--transition);
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus, textarea:focus {
     border-color: var(--primary);
     background: #fff;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
     outline: none;
-}
-
-textarea {
-    resize: vertical;
 }
 
 /* Список тестов */
@@ -190,6 +254,7 @@ textarea {
     align-items: center;
     padding: 16px;
     transition: var(--transition);
+    border-left: 4px solid var(--primary);
 }
 
 .test-link {
@@ -211,6 +276,7 @@ textarea {
     margin-bottom: 24px;
     font-weight: 600;
     text-align: center;
+    animation: pulse 1s infinite;
 }
 
 /* Изображения вопросов */
@@ -227,14 +293,15 @@ textarea {
     align-items: center;
     padding: 12px;
     margin: 8px 0;
-    background: #eceff1;
+    background: var(--card-bg);
+    border: 1px solid var(--primary-dark);
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
 }
 
 .answer-option:hover {
-    background: #cfd8dc;
+    background: var(--accent);
     transform: translateX(8px);
 }
 
@@ -242,73 +309,16 @@ textarea {
     margin-right: 12px;
 }
 
-/* Drag-and-Drop */
-.drag-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.drag-item {
-    padding: 12px;
-    background: #eceff1;
-    border-radius: var(--border-radius);
-    cursor: move;
-    transition: var(--transition);
-}
-
-.drag-item.dragging {
-    opacity: 0.5;
-    transform: scale(0.95);
-}
-
-.drag-item:hover {
-    background: #cfd8dc;
-}
-
-/* Сопоставление */
-.match-container {
-    display: grid;
-    gap: 12px;
-}
-
-.match-pair {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.match-select {
-    padding: 8px;
-    border-radius: 8px;
-}
-
-/* Блоки вопросов */
-.question-block {
-    border-left: 6px solid var(--primary);
-    padding: 16px;
-    margin-bottom: 16px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    animation: slideIn 0.4s ease;
-}
-
-.dark .question-block {
-    background: #263238;
-}
-
-.question-block .delete-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 8px;
-    border-radius: 8px;
-}
-
 /* Анимации */
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(20px); }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 /* Адаптивность */
@@ -321,26 +331,17 @@ textarea {
         padding: 16px;
     }
 
-    nav a {
-        margin: 0 8px;
-        font-size: 0.95rem;
-    }
-
     button {
         padding: 10px 16px;
         font-size: 0.9rem;
     }
 
-    .question-block {
-        padding: 12px;
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
     }
 
     .card {
         padding: 16px;
-    }
-
-    .match-pair {
-        flex-direction: column;
-        align-items: flex-start;
     }
 }
