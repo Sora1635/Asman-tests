@@ -4,7 +4,7 @@
         "time": 300,
         "questions": [
             {
-                "text": "2 + 2о2 = ?",
+                "text": "2 + 2 = ?",
                 "type": "multiple",
                 "options": ["2", "4", "6", "8"],
                 "correct": 1,

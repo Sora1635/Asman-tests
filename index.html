@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тестовая платформа</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -43,7 +44,7 @@
 
         header.dark {
             background: #2c2c2c;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         nav a {
@@ -63,6 +64,11 @@
             border: none;
             font-size: 20px;
             cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.2);
         }
 
         .page {
@@ -78,51 +84,59 @@
             font-size: 2.5rem;
             margin-bottom: 20px;
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .card {
             background: #fff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .card.dark {
             background: #2c2c2c;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         button {
-            padding: 10px 20px;
-            background: #007bff;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #007bff, #00c4ff);
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
+            font-weight: 500;
+            transition: background 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         button:hover {
-            background: #0056b3;
+            background: linear-gradient(45deg, #0056b3, #0096cc);
+            transform: scale(1.05);
         }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: border 0.2s;
+            border-radius: 8px;
+            transition: border 0.2s, box-shadow 0.2s;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
             outline: none;
         }
 
@@ -136,36 +150,70 @@
         .test-link {
             color: #007bff;
             cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .test-link:hover {
+            color: #0056b3;
         }
 
         .timer {
             font-size: 1.2rem;
             color: #e74c3c;
             margin-bottom: 20px;
+            font-weight: 500;
         }
 
         .question-image {
             max-width: 100%;
-            border-radius: 10px;
+            border-radius: 12px;
             margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .answer-option {
             display: block;
-            padding: 10px;
-            margin: 5px 0;
+            padding: 12px;
+            margin: 8px 0;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.2s;
         }
 
         .answer-option:hover {
             background: #e9ecef;
+            transform: translateX(5px);
         }
 
         .answer-option input {
             margin-right: 10px;
+        }
+
+        .question-block {
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        .question-block .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .question-block .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
@@ -179,6 +227,11 @@
 
             nav a {
                 margin: 0 10px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 10px 18px;
             }
         }
     </style>
@@ -190,13 +243,13 @@
             <a href="#" data-page="create">Создать тест</a>
             <a href="#" data-page="take">Пройти тест</a>
         </nav>
-        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
     </header>
 
     <div class="container">
         <div class="page active" id="home">
             <h1>Добро пожаловать в тестовую платформу!</h1>
-            <p>Создавайте и проходите тесты с удобным интерфейсом. Выбирайте между тестом с выбором ответа или вводом текста, настраивайте время и добавляйте изображения.</p>
+            <p>Создавайте и проходите тесты с удобным интерфейсом. Настраивайте вопросы, время и изображения для увлекательного обучения.</p>
         </div>
 
         <div class="page" id="create">
@@ -204,9 +257,11 @@
             <div class="card">
                 <input type="text" id="test-title" placeholder="Название теста">
                 <input type="number" id="test-time" placeholder="Общее время (сек, опционально)">
+                <h3>Добавить вопрос</h3>
                 <textarea id="question-text" placeholder="Текст вопроса или URL изображения"></textarea>
                 <select id="question-type">
                     <option value="multiple">Выбор ответа</option>
+                    <option value="text">Ввод текста</option\\[0]: ./index.html
                     <option value="text">Ввод текста</option>
                 </select>
                 <div id="multiple-options" style="display: none;">
@@ -221,8 +276,9 @@
                     <input type="text" id="answer-instruction" placeholder="Инструкция для ответа">
                 </div>
                 <input type="number" id="question-time" placeholder="Время на вопрос (сек, опционально)">
-                <button onclick="addQuestion()">Добавить вопрос</button>
-                <button onclick="saveTest()">Сохранить тест</button>
+                <button onclick="addQuestion()"><i class="fas fa-plus"></i> Добавить вопрос</button>
+                <div id="question-list"></div>
+                <button onclick="saveTest()"><i class="fas fa-save"></i> Сохранить тест</button>
             </div>
         </div>
 
@@ -232,15 +288,15 @@
             <div class="test-content" style="display: none;">
                 <div class="timer"></div>
                 <div class="question"></div>
-                <button onclick="submitAnswer()">Отправить ответ</button>
-                <button onclick="nextQuestion()">Следующий вопрос</button>
+                <button onclick="submitAnswer()"><i class="fas fa-check"></i> Отправить ответ</button>
+                <button onclick="nextQuestion()"><i class="fas fa-arrow-right"></i> Следующий вопрос</button>
             </div>
         </div>
     </div>
 
     <script>
         let tests = [];
-        let currentTest = null;
+        let currentTest = { questions: [] };
         let currentQuestion = 0;
         let timer = null;
 
@@ -259,6 +315,9 @@
             document.body.classList.toggle('dark');
             document.querySelector('header').classList.toggle('dark');
             document.querySelectorAll('.card').forEach(card => card.classList.toggle('dark'));
+            const toggle = document.querySelector('.theme-toggle i');
+            toggle.classList.toggle('fa-moon');
+            toggle.classList.toggle('fa-sun');
         }
 
         // Загрузка тестов
@@ -300,6 +359,7 @@
                 question.instruction = document.getElementById('answer-instruction').value;
             }
             currentTest.questions.push(question);
+            renderQuestions();
             clearQuestionForm();
         }
 
@@ -313,19 +373,45 @@
             document.getElementById('answer-instruction').value = '';
         }
 
+        // Рендеринг списка вопросов
+        function renderQuestions() {
+            const questionList = document.getElementById('question-list');
+            questionList.innerHTML = '';
+            currentTest.questions.forEach((question, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'question-block';
+                questionBlock.innerHTML = `
+                    <p><strong>Вопрос ${index + 1}:</strong> ${question.text}</p>
+                    <p><strong>Тип:</strong> ${question.type === 'multiple' ? 'Выбор ответа' : 'Ввод текста'}</p>
+                    ${question.time ? `<p><strong>Время:</strong> ${question.time} сек</p>` : ''}
+                    ${question.type === 'multiple' ? `<p><strong>Варианты:</strong> ${question.options.join(', ')}</p><p><strong>Правильный:</strong> ${question.options[question.correct]}</p>` : ''}
+                    ${question.type === 'text' ? `<p><strong>Правильный ответ:</strong> ${question.correct}</p><p><strong>Инструкция:</strong> ${question.instruction}</p>` : ''}
+                    <button class="delete-btn" onclick="deleteQuestion(${index})"><i class="fas fa-trash"></i> Удалить</button>
+                `;
+                questionList.appendChild(questionBlock);
+            });
+        }
+
+        // Удаление вопроса
+        function deleteQuestion(index) {
+            currentTest.questions.splice(index, 1);
+            renderQuestions();
+        }
+
         // Сохранение теста
         function saveTest() {
             const test = {
                 title: document.getElementById('test-title').value,
                 time: parseInt(document.getElementById('test-time').value) || null,
-                questions: currentTest ? currentTest.questions : []
+                questions: currentTest.questions
             };
             tests.push(test);
             // Здесь можно добавить сохранение в JSON-файл через сервер
             alert('Тест сохранен!');
             document.getElementById('test-title').value = '';
             document.getElementById('test-time').value = '';
-            currentTest = null;
+            currentTest = { questions: [] };
+            renderQuestions();
         }
 
         // Тип вопроса
@@ -430,7 +516,6 @@
         }
 
         // Инициализация
-        currentTest = { questions: [] };
         loadTests();
     </script>
 </body>
