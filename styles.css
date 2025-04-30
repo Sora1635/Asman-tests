@@ -1,21 +1,23 @@
 /* Переменные для цветовой палитры */
 :root {
-    --primary: #007bff;
-    --primary-dark: #0056b3;
-    --accent: #00c4ff;
-    --background: #f4f7fa;
-    --text: #333;
-    --card-bg: #fff;
-    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --error: #e74c3c;
-    --border-radius: 12px;
+    --primary: #1e90ff;
+    --primary-dark: #1565c0;
+    --accent: #00b7eb;
+    --background: #e3f2fd;
+    --text: #1a237e;
+    --card-bg: #ffffff;
+    --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    --error: #d32f2f;
+    --success: #2e7d32;
+    --border-radius: 16px;
+    --transition: all 0.3s ease;
 }
 
 .dark {
-    --background: #1a1a1a;
+    --background: #0d1b2a;
     --text: #e0e0e0;
-    --card-bg: #2c2c2c;
-    --shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --card-bg: #1b263b;
+    --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Общие стили */
@@ -27,15 +29,16 @@
 }
 
 body {
-    background: var(--background);
+    background: linear-gradient(135deg, var(--background), #bbdefb);
     color: var(--text);
-    transition: background 0.3s, color 0.3s;
+    transition: var(--transition);
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px;
 }
 
 /* Шапка */
@@ -43,42 +46,46 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 16px 24px;
     background: var(--card-bg);
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 nav a {
-    margin: 0 15px;
+    margin: 0 16px;
     text-decoration: none;
     color: var(--primary);
-    font-weight: 500;
-    transition: color 0.2s;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
 }
 
 nav a:hover {
     color: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
 .theme-toggle {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: transform 0.2s;
+    color: var(--text);
+    transition: var(--transition);
 }
 
 .theme-toggle:hover {
-    transform: scale(1.2);
+    transform: rotate(20deg);
 }
 
 /* Страницы */
 .page {
     display: none;
-    padding: 40px 0;
+    padding: 48px 0;
 }
 
 .page.active {
@@ -86,26 +93,34 @@ nav a:hover {
 }
 
 h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 2.8rem;
+    margin-bottom: 24px;
     text-align: center;
     letter-spacing: 0.5px;
     color: var(--text);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 24px;
 }
 
 /* Карточки */
 .card {
     background: var(--card-bg);
-    padding: 20px;
+    padding: 24px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    margin-bottom: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 24px;
+    transition: var(--transition);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Кнопки */
@@ -116,16 +131,18 @@ button {
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background 0.2s, transform 0.2s;
+    transition: var(--transition);
 }
 
 button:hover {
     background: linear-gradient(45deg, var(--primary-dark), var(--primary));
     transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .delete-btn {
@@ -133,23 +150,31 @@ button:hover {
 }
 
 .delete-btn:hover {
-    background: #c0392b;
+    background: #b71c1c;
 }
 
 /* Поля ввода */
 input, textarea, select {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
+    margin: 12px 0;
+    border: 2px solid #b0bec5;
     border-radius: var(--border-radius);
-    transition: border 0.2s, box-shadow 0.2s;
+    background: #f5f5f5;
+    color: var(--text);
+    font-size: 1rem;
+    transition: var(--transition);
 }
 
 input:focus, textarea:focus, select:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
     outline: none;
+}
+
+textarea {
+    resize: vertical;
 }
 
 /* Список тестов */
@@ -157,70 +182,81 @@ input:focus, textarea:focus, select:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 16px;
+    transition: var(--transition);
 }
 
 .test-link {
     color: var(--primary);
     cursor: pointer;
-    transition: color 0.2s;
+    font-weight: 500;
+    transition: var(--transition);
 }
 
 .test-link:hover {
     color: var(--primary-dark);
+    text-decoration: underline;
 }
 
 /* Таймер */
 .timer {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: var(--error);
-    margin-bottom: 20px;
-    font-weight: 500;
+    margin-bottom: 24px;
+    font-weight: 600;
+    text-align: center;
 }
 
 /* Изображения вопросов */
 .question-image {
     max-width: 100%;
     border-radius: var(--border-radius);
-    margin: 10px 0;
+    margin: 12px 0;
     box-shadow: var(--shadow);
 }
 
 /* Варианты ответа */
 .answer-option {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 12px;
     margin: 8px 0;
-    background: #f8f9fa;
+    background: #eceff1;
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: var(--transition);
 }
 
 .answer-option:hover {
-    background: #e9ecef;
-    transform: translateX(5px);
+    background: #cfd8dc;
+    transform: translateX(8px);
 }
 
 .answer-option input {
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 /* Блоки вопросов */
 .question-block {
-    border-left: 4px solid var(--primary);
-    padding-left: 15px;
-    margin-bottom: 15px;
+    border-left: 6px solid var(--primary);
+    padding: 16px;
+    margin-bottom: 16px;
     position: relative;
-    animation: slideIn 0.3s ease;
+    background: #f5f5f5;
+    border-radius: 8px;
+    animation: slideIn 0.4s ease;
+}
+
+.dark .question-block {
+    background: #263238;
 }
 
 .question-block .delete-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 12px;
+    right: 12px;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 /* Анимации */
@@ -232,23 +268,28 @@ input:focus, textarea:focus, select:focus {
 /* Адаптивность */
 @media (max-width: 768px) {
     h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
 
     .container {
-        padding: 10px;
+        padding: 16px;
     }
 
     nav a {
-        margin: 0 10px;
-        font-size: 0.9rem;
+        margin: 0 8px;
+        font-size: 0.95rem;
     }
 
     button {
-        padding: 10px 18px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
     }
 
     .question-block {
-        padding-left: 10px;
+        padding: 12px;
+    }
+
+    .card {
+        padding: 16px;
     }
 }
