@@ -1,0 +1,35 @@
+[
+    {
+        "title": "Тест по математике",
+        "time": 300,
+        "questions": [
+            {
+                "text": "2 + 2о2 = ?",
+                "type": "multiple",
+                "options": ["2", "4", "6", "8"],
+                "correct": 1,
+                "time": null
+            },
+            {
+                "text": "https://example.com/math.jpg",
+                "type": "text",
+                "correct": "x = 5",
+                "instruction": "Введите ответ в формате x = число",
+                "time": 60
+            }
+        ]
+    },
+    {
+        "title": "Тест по истории",
+        "time": null,
+        "questions": [
+            {
+                "text": "Когда началась Вторая мировая война?",
+                "type": "multiple",
+                "options": ["1939", "1941", "1945", "1914"],
+                "correct": 0,
+                "time": 30
+            }
+        ]
+    }
+]
