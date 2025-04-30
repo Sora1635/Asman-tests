@@ -175,6 +175,7 @@
                 input.type = 'text';
                 input.id = 'text-answer';
                 input.value = answers[currentQuestion] || '';
+                input.setAttribute('autocomplete', 'off'); // Отключение автозаполнения
                 questionDiv.appendChild(input);
                 const p = document.createElement('p');
                 p.textContent = question.instruction;
