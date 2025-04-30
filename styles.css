@@ -1,0 +1,254 @@
+/* Переменные для цветовой палитры */
+:root {
+    --primary: #007bff;
+    --primary-dark: #0056b3;
+    --accent: #00c4ff;
+    --background: #f4f7fa;
+    --text: #333;
+    --card-bg: #fff;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --error: #e74c3c;
+    --border-radius: 12px;
+}
+
+.dark {
+    --background: #1a1a1a;
+    --text: #e0e0e0;
+    --card-bg: #2c2c2c;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Шапка */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--primary-dark);
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.2);
+}
+
+/* Страницы */
+.page {
+    display: none;
+    padding: 40px 0;
+}
+
+.page.active {
+    display: block;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: var(--text);
+}
+
+/* Карточки */
+.card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Кнопки */
+button {
+    padding: 12px 24px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.2s;
+}
+
+button:hover {
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    transform: scale(1.05);
+}
+
+.delete-btn {
+    background: var(--error);
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+/* Поля ввода */
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    outline: none;
+}
+
+/* Список тестов */
+.test-list .test-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.test-link {
+    color: var(--primary);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.test-link:hover {
+    color: var(--primary-dark);
+}
+
+/* Таймер */
+.timer {
+    font-size: 1.2rem;
+    color: var(--error);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* Изображения вопросов */
+.question-image {
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    margin: 10px 0;
+    box-shadow: var(--shadow);
+}
+
+/* Варианты ответа */
+.answer-option {
+    display: block;
+    padding: 12px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.answer-option:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.answer-option input {
+    margin-right: 10px;
+}
+
+/* Блоки вопросов */
+.question-block {
+    border-left: 4px solid var(--primary);
+    padding-left: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+.question-block .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* Анимации */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    nav a {
+        margin: 0 10px;
+        font-size: 0.9rem;
+    }
+
+    button {
+        padding: 10px 18px;
+    }
+
+    .question-block {
+        padding-left: 10px;
+    }
+}
