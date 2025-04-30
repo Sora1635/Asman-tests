@@ -9,59 +9,28 @@
 </head>
 <body>
     <header>
-        <nav>
-            <a href="#" data-page="home">Главная</a>
-            <a href="#" data-page="create">Создать тест</a>
-            <a href="#" data-page="take">Пройти тест</a>
-        </nav>
         <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
     </header>
 
     <div class="container">
         <div class="page active" id="home">
-            <h1>Создавай и проходи тесты с удовольствием!</h1>
-            <p>Погрузись в мир знаний с нашей яркой и удобной платформой!</p>
+            <h1>Пройди увлекательные тесты!</h1>
+            <p>Проверь свои знания и узнай свой результат!</p>
             <div class="home-buttons">
                 <button class="action-btn" onclick="goToTests()"><i class="fas fa-play"></i> Тесты</button>
-                <button class="action-btn create-btn" onclick="goToCreate()"><i class="fas fa-plus"></i> Создать тест</button>
-            </div>
-        </div>
-
-        <div class="page" id="create">
-            <h1>Создай свой тест</h1>
-            <div class="card create-card">
-                <input type="text" id="test-title" placeholder="Название теста" required>
-                <input type="number" id="test-time" placeholder="Общее время (сек, опционально)">
-                <h3>Добавить вопрос</h3>
-                <textarea id="question-text" placeholder="Текст вопроса или URL изображения" required></textarea>
-                <select id="question-type">
-                    <option value="multiple">Выбор ответа</option>
-                    <option value="text">Ввод текста</option>
-                </select>
-                <div id="multiple-options" style="display: none;">
-                    <input type="text" class="option" placeholder="Вариант 1" required>
-                    <input type="text" class="option" placeholder="Вариант 2" required>
-                    <input type="text" class="option" placeholder="Вариант 3" required>
-                    <input type="text" class="option" placeholder="Вариант 4" required>
-                    <input type="number" id="correct-option" placeholder="Номер правильного ответа (1-4)" min="1" max="4" required>
-                </div>
-                <div id="text-answer" style="display: none;">
-                    <input type="text" id="correct-text" placeholder="Правильный ответ" required>
-                    <input type="text" id="answer-instruction" placeholder="Инструкция для ответа">
-                </div>
-                <input type="number" id="question-time" placeholder="Время на вопрос (сек, опционально)">
-                <button class="add-question-btn" onclick="addQuestion()"><i class="fas fa-plus"></i> Добавить вопрос</button>
-                <div id="question-list"></div>
-                <button class="save-test-btn" onclick="saveTest()"><i class="fas fa-save"></i> Сохранить тест</button>
             </div>
         </div>
 
         <div class="page" id="take">
-            <h1>Пройти тест</h1>
+            <h1>Выбери тест</h1>
             <div class="test-list"></div>
             <div class="test-content" style="display: none;">
                 <div class="timer"></div>
                 <div class="question"></div>
+                <div class="score">
+                    <p>Баллы: <span id="score">0</span></p>
+                    <p>Процент правильных: <span id="percentage">0%</span></p>
+                </div>
                 <button onclick="submitAnswer()"><i class="fas fa-check"></i> Отправить ответ</button>
                 <button onclick="nextQuestion()"><i class="fas fa-arrow-right"></i> Следующий вопрос</button>
             </div>
@@ -70,19 +39,11 @@
 
     <script>
         let serverTests = [];
-        let currentTest = { questions: [] };
+        let currentTest = null;
         let currentQuestion = 0;
         let timer = null;
-
-        // Переключение страниц
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-                document.getElementById(link.dataset.page).classList.add('active');
-                if (link.dataset.page === 'take') loadTests();
-            });
-        });
+        let score = 0;
+        let totalQuestions = 0;
 
         // Переключение темы
         function toggleTheme() {
@@ -94,16 +55,11 @@
             toggle.classList.toggle('fa-sun');
         }
 
-        // Навигация с главной страницы
+        // Переход к тестам
         function goToTests() {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById('take').classList.add('active');
             loadTests();
-        }
-
-        function goToCreate() {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('create').classList.add('active');
         }
 
         // Загрузка тестов
@@ -126,110 +82,20 @@
                 testItem.className = 'test-item card';
                 testItem.innerHTML = `
                     <span>${test.title}</span>
-                    <span>
-                        <a class="test-link" onclick="startTest(${index})">Начать</a>
-                        <a class="test-link" onclick="copyTestLink(${index})">Копировать ссылку</a>
-                    </span>
+                    <a class="test-link" onclick="startTest(${index})">Начать</a>
                 `;
                 testList.appendChild(testItem);
             });
         }
 
-        // Добавление вопроса
-        function addQuestion() {
-            const question = {
-                text: document.getElementById('question-text').value || 'Без текста',
-                type: document.getElementById('question-type').value,
-                time: parseInt(document.getElementById('question-time').value) || null
-            };
-            if (question.type === 'multiple') {
-                question.options = Array.from(document.querySelectorAll('.option')).map(opt => opt.value || 'Пустой вариант');
-                question.correct = parseInt(document.getElementById('correct-option').value) - 1 || 0;
-            } else {
-                question.correct = document.getElementById('correct-text').value || 'Без ответа';
-                question.instruction = document.getElementById('answer-instruction').value || 'Без инструкции';
-            }
-            currentTest.questions.push(question);
-            renderQuestions();
-            clearQuestionForm();
-        }
-
-        // Очистка формы вопроса
-        function clearQuestionForm() {
-            document.getElementById('question-text').value = '';
-            document.getElementById('question-time').value = '';
-            document.querySelectorAll('.option').forEach(opt => opt.value = '');
-            document.getElementById('correct-option').value = '';
-            document.getElementById('correct-text').value = '';
-            document.getElementById('answer-instruction').value = '';
-        }
-
-        // Рендеринг списка вопросов
-        function renderQuestions() {
-            const questionList = document.getElementById('question-list');
-            questionList.innerHTML = '';
-            currentTest.questions.forEach((question, index) => {
-                const questionBlock = document.createElement('div');
-                questionBlock.className = 'question-block';
-                questionBlock.innerHTML = `
-                    <p><strong>Вопрос ${index + 1}:</strong> ${question.text}</p>
-                    <p><strong>Тип:</strong> ${question.type === 'multiple' ? 'Выбор ответа' : 'Ввод текста'}</p>
-                    ${question.time ? `<p><strong>Время:</strong> ${question.time} сек</p>` : ''}
-                    ${question.type === 'multiple' ? `<p><strong>Варианты:</strong> ${question.options.join(', ')}</p><p><strong>Правильный:</strong> ${question.options[question.correct]}</p>` : ''}
-                    ${question.type === 'text' ? `<p><strong>Правильный ответ:</strong> ${question.correct}</p><p><strong>Инструкция:</strong> ${question.instruction}</p>` : ''}
-                    <button class="delete-btn" onclick="deleteQuestion(${index})"><i class="fas fa-trash"></i> Удалить</button>
-                `;
-                questionList.appendChild(questionBlock);
-            });
-        }
-
-        // Удаление вопроса
-        function deleteQuestion(index) {
-            currentTest.questions.splice(index, 1);
-            renderQuestions();
-        }
-
-        // Сохранение теста
-        async function saveTest() {
-            const test = {
-                title: document.getElementById('test-title').value || 'Без названия',
-                time: parseInt(document.getElementById('test-time').value) || null,
-                questions: currentTest.questions
-            };
-            if (!test.title || test.questions.length === 0) {
-                alert('Введите название теста и добавьте хотя бы один вопрос!');
-                return;
-            }
-            serverTests.push(test);
-            try {
-                // Симуляция сохранения на сервер (в реальном проекте нужен API)
-                await fetch('tests.json', {
-                    method: 'PUT', // В реальном проекте используйте POST или API
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(serverTests)
-                });
-                alert('Тест успешно сохранен!');
-                document.getElementById('test-title').value = '';
-                document.getElementById('test-time').value = '';
-                currentTest = { questions: [] };
-                renderQuestions();
-                renderTestList();
-            } catch (e) {
-                console.error('Ошибка сохранения теста:', e);
-                alert('Ошибка при сохранении теста!');
-            }
-        }
-
-        // Тип вопроса
-        document.getElementById('question-type').addEventListener('change', (e) => {
-            document.getElementById('multiple-options').style.display = e.target.value === 'multiple' ? 'block' : 'none';
-            document.getElementById('text-answer').style.display = e.target.value === 'text' ? 'block' : 'none';
-        });
-
         // Начало теста
         function startTest(index) {
             currentTest = serverTests[index];
             currentQuestion = 0;
+            score = 0;
+            totalQuestions = currentTest.questions.length;
+            document.getElementById('score').textContent = score;
+            document.getElementById('percentage').textContent = '0%';
             document.querySelector('.test-list').style.display = 'none';
             document.querySelector('.test-content').style.display = 'block';
             loadQuestion();
@@ -298,6 +164,12 @@
                 const answer = document.getElementById('text-answer').value;
                 correct = answer.toLowerCase() === question.correct.toLowerCase();
             }
+            if (correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+                const percentage = Math.round((score / totalQuestions) * 100);
+                document.getElementById('percentage').textContent = `${percentage}%`;
+            }
             alert(correct ? 'Правильно!' : 'Неправильно!');
         }
 
@@ -308,17 +180,12 @@
                 clearInterval(timer);
                 document.querySelector('.test-content').style.display = 'none';
                 document.querySelector('.test-list').style.display = 'block';
-                alert('Тест завершен!');
+                const percentage = Math.round((score / totalQuestions) * 100);
+                alert(`Тест завершен! Ваш результат: ${score}/${totalQuestions} (${percentage}%)`);
                 return;
             }
             loadQuestion();
             startTimer();
-        }
-
-        // Копирование ссылки
-        function copyTestLink(index) {
-            const url = `${window.location.origin}/?test=${index}`;
-            navigator.clipboard.writeText(url).then(() => alert('Ссылка скопирована!'));
         }
 
         // Инициализация
