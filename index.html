@@ -48,7 +48,6 @@
                     <div class="button-group">
                         <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
                         <button class="finish-btn" onclick="finishTest()">Завершить тест</button>
-                        <button class="reset-btn" onclick="resetTest()">Сбросить тест</button>
                     </div>
                 </div>
                 <div class="test-results" style="display: none;">
@@ -165,6 +164,10 @@
                     div.className = 'answer-option';
                     const checked = answers[currentQuestion] === i ? 'checked' : '';
                     div.innerHTML = `<input type="radio" name="answer" value="${i}" ${checked}>${option}`;
+                    div.addEventListener('click', () => {
+                        const radio = div.querySelector('input[type="radio"]');
+                        radio.checked = true;
+                    });
                     questionDiv.appendChild(div);
                 });
             } else {
@@ -266,17 +269,6 @@
                 document.getElementById('percentage').textContent = percentage + '%';
             } else {
                 alert('Завершение теста отменено');
-            }
-        }
-
-        // Сброс теста
-        function resetTest() {
-            if (confirm('Вы уверены, что хотите сбросить тест?')) {
-                currentQuestion = 0;
-                answers = new Array(totalQuestions).fill(null);
-                updateProgressBar();
-                loadQuestion();
-                startTimer();
             }
         }
 

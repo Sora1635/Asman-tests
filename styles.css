@@ -20,7 +20,7 @@
     --accent: #4dd0e1; /* Светлый бирюзовый */
     --background: #0d1b2a; /* Темный фон */
     --text: #e0e0e0; /* Светлый текст */
-    --card-bg: #1b263b;Jonah /* Темный фон карточек */
+    --card-bg: #1b263b; /* Темный фон карточек */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     --answered: #81c784; /* Светлый зеленый */
 }
@@ -248,15 +248,6 @@ button:disabled {
 
 .finish-btn:hover {
     background: linear-gradient(45deg, #b71c1c, #d32f2f);
-}
-
-/* Кнопка сброса */
-.reset-btn {
-    background: linear-gradient(45deg, #ff9800, #ffb300);
-}
-
-.reset-btn:hover {
-    background: linear-gradient(45deg, #f57c00, #ff9800);
 }
 
 /* Прогресс-бар */
