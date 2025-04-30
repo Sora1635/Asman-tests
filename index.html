@@ -42,8 +42,8 @@
                     <div class="question-number"></div>
                     <div class="question"></div>
                     <div class="navigation">
-                        <button onclick="prevQuestion()" class="nav-btn"><i class="fas fa-arrow-left"></i> Назад</button>
-                        <button onclick="nextQuestion()" class="nav-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
+                        <button onclick="prevQuestion()" class="nav-btn prev-btn"><i class="fas fa-arrow-left"></i> Назад</button>
+                        <button onclick="nextQuestion()" class="nav-btn next-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
                     </div>
                     <div class="button-group">
                         <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
@@ -188,6 +188,11 @@
                 saveButton.textContent = 'Сохранить ответ';
                 saveButton.disabled = false;
             }
+            // Управление видимостью кнопок навигации
+            const prevButton = document.querySelector('.prev-btn');
+            const nextButton = document.querySelector('.next-btn');
+            prevButton.style.display = currentQuestion === 0 ? 'none' : 'inline-flex';
+            nextButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
             questionDiv.style.animation = 'fadeIn 0.5s ease';
         }
 
@@ -242,17 +247,29 @@
         // Переход к следующему вопросу
         function nextQuestion() {
             if (!allowSkipQuestions && answers[currentQuestion] === null) {
-                alert('Пожалуйста, ответьте на вопрос!');
-                return;
+                const confirmAction = confirm('Вы не сохранили ответ. Хотите сохранить перед переходом? Нажмите "OK" для сохранения, "Отмена" для перехода без сохранения.');
+                if (confirmAction) {
+                    saveAnswer();
+                } else {
+                    currentQuestion++;
+                    if (currentQuestion >= totalQuestions) {
+                        finishTest();
+                        return;
+                    }
+                    updateProgressBar();
+                    loadQuestion();
+                    startTimer();
+                }
+            } else {
+                currentQuestion++;
+                if (currentQuestion >= totalQuestions) {
+                    finishTest();
+                    return;
+                }
+                updateProgressBar();
+                loadQuestion();
+                startTimer();
             }
-            currentQuestion++;
-            if (currentQuestion >= totalQuestions) {
-                finishTest();
-                return;
-            }
-            updateProgressBar();
-            loadQuestion();
-            startTimer();
         }
 
         // Завершение тестирования
