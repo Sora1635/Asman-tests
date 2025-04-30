@@ -1,27 +1,25 @@
 /* Переменные для цветовой палитры */
 :root {
-    --primary: #ff4d6d; /* Яркий розовый */
-    --primary-dark: #c9184a; /* Темный розовый */
-    --accent: #48cae4; /* Яркий голубой */
-    --background: #f8f9fa; /* Светлый фон */
-    --text: #212529; /* Темный текст */
+    --primary: #2196f3; /* Яркий синий */
+    --primary-dark: #1565c0; /* Темный синий */
+    --accent: #26c6da; /* Бирюзовый */
+    --background: #e3f2fd; /* Светлый голубой фон */
+    --text: #0d47a1; /* Темно-синий текст */
     --card-bg: #ffffff; /* Белый фон карточек */
-    --card-border: #dee2e6; /* Светлая граница */
-    --shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    --error: #dc3545; /* Красный для ошибок */
-    --success: #28a745; /* Зеленый для успеха */
-    --border-radius: 10px;
+    --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    --error: #d32f2f; /* Красный для ошибок */
+    --success: #2e7d32; /* Зеленый для успеха */
+    --border-radius: 16px;
     --transition: all 0.3s ease;
 }
 
 .dark {
-    --primary: #ff8fa3; /* Светлый розовый для темной темы */
-    --primary-dark: #ffb3c1; /* Очень светлый розовый */
-    --accent: #90e0ef; /* Светлый голубой */
-    --background: #212529; /* Темный фон */
-    --text: #f8f9fa; /* Светлый текст */
-    --card-bg: #343a40; /* Темный фон карточек */
-    --card-border: #495057; /* Темная граница */
+    --primary: #64b5f6; /* Светлый синий */
+    --primary-dark: #90caf9; /* Очень светлый синий */
+    --accent: #4dd0e1; /* Светлый бирюзовый */
+    --background: #0d1b2a; /* Темный фон */
+    --text: #e0e0e0; /* Светлый текст */
+    --card-bg: #1b263b; /* Темный фон карточек */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -34,29 +32,29 @@
 }
 
 body {
-    background: linear-gradient(135deg, var(--background), #e9ecef);
+    background: linear-gradient(135deg, var(--background), #bbdefb);
     color: var(--text);
     transition: var(--transition);
     min-height: 100vh;
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px;
 }
 
 /* Шапка */
 header {
     display: flex;
     justify-content: flex-end;
-    padding: 15px 20px;
+    padding: 16px 24px;
     background: var(--card-bg);
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid var(--card-border);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .theme-toggle {
@@ -69,14 +67,13 @@ header {
 }
 
 .theme-toggle:hover {
-    transform: rotate(360deg);
+    transform: rotate(20deg);
 }
 
 /* Страницы */
 .page {
     display: none;
-    padding: 40px 0;
-    animation: fadeIn 0.5s ease;
+    padding: 48px 0;
 }
 
 .page.active {
@@ -84,24 +81,25 @@ header {
 }
 
 h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 2.8rem;
+    margin-bottom: 24px;
     text-align: center;
+    letter-spacing: 0.5px;
     color: var(--text);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     line-height: 1.6;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     color: var(--text);
 }
 
 /* Кнопки на главной */
 .home-buttons {
-    display: flex禁止: flex;
+    display: flex;
     justify-content: center;
     margin-top: 30px;
 }
@@ -109,7 +107,7 @@ p {
 .action-btn {
     padding: 15px 30px;
     background: linear-gradient(45deg, var(--primary), var(--accent));
-    color: var(--text);
+    color: #fff;
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -117,32 +115,104 @@ p {
     font-size: 1.2rem;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 10px;
     box-shadow: var(--shadow);
     transition: var(--transition);
-    width: 200px;
 }
 
 .action-btn:hover {
     background: linear-gradient(45deg, var(--primary-dark), var(--primary));
-    transform: scale(1.1);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Карточки */
 .card {
     background: var(--card-bg);
-    padding: 20px;
+    padding: 24px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    margin-bottom: 20px;
-    border: 1px solid var(--card-border);
+    margin-bottom: 24px;
     transition: var(--transition);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Кнопки */
+button {
+    padding: 12px 24px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+button:hover {
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+    background: #b0bec5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Навигационные кнопки */
+.nav-btn {
+    background: linear-gradient(45deg, var(--accent), var(--primary));
+}
+
+.nav-btn:hover {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+}
+
+/* Номер вопроса */
+.question-number {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+/* Навигация */
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+/* Поля ввода */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 2px solid var(--primary-dark);
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+input:focus, textarea:focus {
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    outline: none;
 }
 
 /* Список тестов */
@@ -150,7 +220,7 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 16px;
     transition: var(--transition);
     border-left: 4px solid var(--primary);
 }
@@ -158,7 +228,7 @@ p {
 .test-link {
     color: var(--primary);
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 500;
     transition: var(--transition);
 }
 
@@ -169,36 +239,19 @@ p {
 
 /* Таймер */
 .timer {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: var(--error);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     font-weight: 600;
     text-align: center;
     animation: pulse 1s infinite;
-}
-
-/* Результаты */
-.score {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.score p {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 10px 0;
-    color: var(--text);
-}
-
-.score span {
-    color: var(--primary);
 }
 
 /* Изображения вопросов */
 .question-image {
     max-width: 100%;
     border-radius: var(--border-radius);
-    margin: 10px 0;
+    margin: 12px 0;
     box-shadow: var(--shadow);
 }
 
@@ -206,10 +259,10 @@ p {
 .answer-option {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
     margin: 8px 0;
     background: var(--card-bg);
-    border: 1px solid var(--card-border);
+    border: 1px solid var(--primary-dark);
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
@@ -217,39 +270,17 @@ p {
 
 .answer-option:hover {
     background: var(--accent);
-    transform: translateX(5px);
+    transform: translateX(8px);
 }
 
 .answer-option input {
-    margin-right: 10px;
-}
-
-/* Кнопки в тесте */
-button {
-    padding: 12px 20px;
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-    color: var(--text);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition);
-    margin: 10px;
-}
-
-button:hover {
-    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
-    transform: scale(1.05);
+    margin-right: 12px;
 }
 
 /* Анимации */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse {
@@ -265,19 +296,20 @@ button:hover {
     }
 
     .container {
-        padding: 15px;
+        padding: 16px;
     }
 
     button {
-        padding: 10px 15px;
+        padding: 10px 16px;
         font-size: 0.9rem;
     }
 
-    .action-btn {
-        width: 100%;
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .score p {
-        font-size: 1rem;
+    .card {
+        padding: 16px;
     }
 }

@@ -26,13 +26,13 @@
             <div class="test-list"></div>
             <div class="test-content" style="display: none;">
                 <div class="timer"></div>
+                <div class="question-number"></div>
                 <div class="question"></div>
-                <div class="score">
-                    <p>Баллы: <span id="score">0</span></p>
-                    <p>Процент правильных: <span id="percentage">0%</span></p>
+                <div class="navigation">
+                    <button onclick="prevQuestion()" class="nav-btn"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button onclick="nextQuestion()" class="nav-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
                 </div>
-                <button onclick="submitAnswer()"><i class="fas fa-check"></i> Отправить ответ</button>
-                <button onclick="nextQuestion()"><i class="fas fa-arrow-right"></i> Следующий вопрос</button>
+                <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
             </div>
         </div>
     </div>
@@ -42,8 +42,13 @@
         let currentTest = null;
         let currentQuestion = 0;
         let timer = null;
+        let answers = []; // Массив для хранения ответов
         let score = 0;
         let totalQuestions = 0;
+
+        // Настройки
+        const allowSkipQuestions = true; // Разрешить переход без ответа
+        const allowOverwriteAnswers = false; // Разрешить пересохранение ответов
 
         // Переключение темы
         function toggleTheme() {
@@ -94,8 +99,7 @@
             currentQuestion = 0;
             score = 0;
             totalQuestions = currentTest.questions.length;
-            document.getElementById('score').textContent = score;
-            document.getElementById('percentage').textContent = '0%';
+            answers = new Array(totalQuestions).fill(null); // Инициализация массива ответов
             document.querySelector('.test-list').style.display = 'none';
             document.querySelector('.test-content').style.display = 'block';
             loadQuestion();
@@ -106,6 +110,8 @@
         function loadQuestion() {
             const question = currentTest.questions[currentQuestion];
             const questionDiv = document.querySelector('.question');
+            const questionNumberDiv = document.querySelector('.question-number');
+            questionNumberDiv.textContent = `Вопрос ${currentQuestion + 1} из ${totalQuestions}`;
             questionDiv.innerHTML = '';
             if (question.text.match(/\.(jpg|png|gif)$/)) {
                 const img = document.createElement('img');
@@ -121,17 +127,28 @@
                 question.options.forEach((option, i) => {
                     const div = document.createElement('div');
                     div.className = 'answer-option';
-                    div.innerHTML = `<input type="radio" name="answer" value="${i}">${option}`;
+                    const checked = answers[currentQuestion] === i ? 'checked' : '';
+                    div.innerHTML = `<input type="radio" name="answer" value="${i}" ${checked}>${option}`;
                     questionDiv.appendChild(div);
                 });
             } else {
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.id = 'text-answer';
+                input.value = answers[currentQuestion] || '';
                 questionDiv.appendChild(input);
                 const p = document.createElement('p');
                 p.textContent = question.instruction;
                 questionDiv.appendChild(p);
+            }
+            // Обновление кнопки "Сохранить ответ"
+            const saveButton = document.getElementById('save-answer');
+            if (!allowOverwriteAnswers && answers[currentQuestion] !== null) {
+                saveButton.textContent = 'На вопрос уже дан ответ';
+                saveButton.disabled = true;
+            } else {
+                saveButton.textContent = 'Сохранить ответ';
+                saveButton.disabled = false;
             }
         }
 
@@ -153,31 +170,38 @@
             }, 1000);
         }
 
-        // Отправка ответа
-        function submitAnswer() {
+        // Сохранение ответа
+        function saveAnswer() {
             const question = currentTest.questions[currentQuestion];
-            let correct = false;
             if (question.type === 'multiple') {
                 const selected = document.querySelector('input[name="answer"]:checked');
-                correct = selected && parseInt(selected.value) === question.correct;
+                answers[currentQuestion] = selected ? parseInt(selected.value) : null;
             } else {
                 const answer = document.getElementById('text-answer').value;
-                correct = answer.toLowerCase() === question.correct.toLowerCase();
+                answers[currentQuestion] = answer;
             }
-            if (correct) {
-                score++;
-                document.getElementById('score').textContent = score;
-                const percentage = Math.round((score / totalQuestions) * 100);
-                document.getElementById('percentage').textContent = `${percentage}%`;
-            }
-            alert(correct ? 'Правильно!' : 'Неправильно!');
+            nextQuestion();
         }
 
-        // Следующий вопрос
+        // Переход к предыдущему вопросу
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+                startTimer();
+            }
+        }
+
+        // Переход к следующему вопросу
         function nextQuestion() {
+            if (!allowSkipQuestions && answers[currentQuestion] === null) {
+                alert('Пожалуйста, ответьте на вопрос!');
+                return;
+            }
             currentQuestion++;
-            if (currentQuestion >= currentTest.questions.length) {
+            if (currentQuestion >= totalQuestions) {
                 clearInterval(timer);
+                calculateScore();
                 document.querySelector('.test-content').style.display = 'none';
                 document.querySelector('.test-list').style.display = 'block';
                 const percentage = Math.round((score / totalQuestions) * 100);
@@ -186,6 +210,22 @@
             }
             loadQuestion();
             startTimer();
+        }
+
+        // Подсчет баллов
+        function calculateScore() {
+            score = 0;
+            currentTest.questions.forEach((question, index) => {
+                if (question.type === 'multiple') {
+                    if (answers[index] === question.correct) {
+                        score++;
+                    }
+                } else {
+                    if (answers[index] && answers[index].toLowerCase() === question.correct.toLowerCase()) {
+                        score++;
+                    }
+                }
+            });
         }
 
         // Инициализация
