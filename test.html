@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-ky="Тест" data-lang-ru="Тест">Тест</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1 data-lang-ky="Тест" data-lang-ru="Тест">Тест</h1>
+        <div class="lang-switch">
+            <button id="lang-ky" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
+        </div>
+    </header>
+
+    <div class="menu">
+        <div id="timer" data-lang-ky="Калган убакыт: " data-lang-ru="Оставшееся время: "></div>
+        <div id="question-counter"></div>
+        <div id="questions"></div>
+        <div id="answers"></div>
+        <div class="test-controls">
+            <button id="prev-question" class="action-button" data-lang-ky="Мурунку" data-lang-ru="Предыдущий"><i class="fas fa-chevron-left"></i> Мурунку</button>
+            <button id="next-question" class="action-button" data-lang-ky="Кийинки" data-lang-ru="Следующий"><i class="fas fa-chevron-right"></i> Кийинки</button>
+            <button id="submit-test" class="action-button" data-lang-ky="Тапшыруу" data-lang-ru="Сдать"><i class="fas fa-check"></i> Тапшыруу</button>
+        </div>
+        <button id="back-main-test" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Test page loaded');
+            loadTest();
+            updateTexts();
+        });
+    </script>
+</body>
+</html>

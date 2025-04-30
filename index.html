@@ -19,36 +19,40 @@
 
     <div class="container">
         <div class="page active" id="home">
-            <h1>Добро пожаловать в тестовую платформу!</h1>
-            <p>Создавайте и проходите увлекательные тесты с ярким интерфейсом!</p>
+            <h1>Создавай и проходи тесты с удовольствием!</h1>
+            <p>Погрузись в мир знаний с нашей яркой и удобной платформой!</p>
+            <div class="home-buttons">
+                <button class="action-btn" onclick="goToTests()"><i class="fas fa-play"></i> Тесты</button>
+                <button class="action-btn create-btn" onclick="goToCreate()"><i class="fas fa-plus"></i> Создать тест</button>
+            </div>
         </div>
 
         <div class="page" id="create">
-            <h1>Создать тест</h1>
-            <div class="card">
-                <input type="text" id="test-title" placeholder="Название теста">
+            <h1>Создай свой тест</h1>
+            <div class="card create-card">
+                <input type="text" id="test-title" placeholder="Название теста" required>
                 <input type="number" id="test-time" placeholder="Общее время (сек, опционально)">
                 <h3>Добавить вопрос</h3>
-                <textarea id="question-text" placeholder="Текст вопроса или URL изображения"></textarea>
+                <textarea id="question-text" placeholder="Текст вопроса или URL изображения" required></textarea>
                 <select id="question-type">
                     <option value="multiple">Выбор ответа</option>
                     <option value="text">Ввод текста</option>
                 </select>
                 <div id="multiple-options" style="display: none;">
-                    <input type="text" class="option" placeholder="Вариант 1">
-                    <input type="text" class="option" placeholder="Вариант 2">
-                    <input type="text" class="option" placeholder="Вариант 3">
-                    <input type="text" class="option" placeholder="Вариант 4">
-                    <input type="number" id="correct-option" placeholder="Номер правильного ответа (1-4)">
+                    <input type="text" class="option" placeholder="Вариант 1" required>
+                    <input type="text" class="option" placeholder="Вариант 2" required>
+                    <input type="text" class="option" placeholder="Вариант 3" required>
+                    <input type="text" class="option" placeholder="Вариант 4" required>
+                    <input type="number" id="correct-option" placeholder="Номер правильного ответа (1-4)" min="1" max="4" required>
                 </div>
                 <div id="text-answer" style="display: none;">
-                    <input type="text" id="correct-text" placeholder="Правильный ответ">
+                    <input type="text" id="correct-text" placeholder="Правильный ответ" required>
                     <input type="text" id="answer-instruction" placeholder="Инструкция для ответа">
                 </div>
                 <input type="number" id="question-time" placeholder="Время на вопрос (сек, опционально)">
-                <button onclick="addQuestion()"><i class="fas fa-plus"></i> Добавить вопрос</button>
+                <button class="add-question-btn" onclick="addQuestion()"><i class="fas fa-plus"></i> Добавить вопрос</button>
                 <div id="question-list"></div>
-                <button onclick="saveTest()"><i class="fas fa-save"></i> Сохранить тест</button>
+                <button class="save-test-btn" onclick="saveTest()"><i class="fas fa-save"></i> Сохранить тест</button>
             </div>
         </div>
 
@@ -66,7 +70,6 @@
 
     <script>
         let serverTests = [];
-        // let userTests = []; // Закомментировано: пользовательские тесты
         let currentTest = { questions: [] };
         let currentQuestion = 0;
         let timer = null;
@@ -75,7 +78,6 @@
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('Переключение на страницу:', link.dataset.page);
                 document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                 document.getElementById(link.dataset.page).classList.add('active');
                 if (link.dataset.page === 'take') loadTests();
@@ -84,7 +86,6 @@
 
         // Переключение темы
         function toggleTheme() {
-            console.log('Переключение темы');
             document.body.classList.toggle('dark');
             document.querySelector('header').classList.toggle('dark');
             document.querySelectorAll('.card').forEach(card => card.classList.toggle('dark'));
@@ -93,34 +94,49 @@
             toggle.classList.toggle('fa-sun');
         }
 
-        // Загрузка серверных тестов
+        // Навигация с главной страницы
+        function goToTests() {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('take').classList.add('active');
+            loadTests();
+        }
+
+        function goToCreate() {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('create').classList.add('active');
+        }
+
+        // Загрузка тестов
         async function loadTests() {
             try {
-                console.log('Загрузка тестов из tests.json');
                 const response = await fetch('tests.json');
                 serverTests = await response.json();
-                const testList = document.querySelector('.test-list');
-                testList.innerHTML = '';
-                serverTests.forEach((test, index) => {
-                    const testItem = document.createElement('div');
-                    testItem.className = 'test-item card';
-                    testItem.innerHTML = `
-                        <span>${test.title}</span>
-                        <span>
-                            <a class="test-link" onclick="startTest(${index})">Начать</a>
-                            <a class="test-link" onclick="copyTestLink(${index})">Копировать ссылку</a>
-                        </span>
-                    `;
-                    testList.appendChild(testItem);
-                });
+                renderTestList();
             } catch (e) {
                 console.error('Ошибка загрузки тестов:', e);
             }
         }
 
+        // Рендеринг списка тестов
+        function renderTestList() {
+            const testList = document.querySelector('.test-list');
+            testList.innerHTML = '';
+            serverTests.forEach((test, index) => {
+                const testItem = document.createElement('div');
+                testItem.className = 'test-item card';
+                testItem.innerHTML = `
+                    <span>${test.title}</span>
+                    <span>
+                        <a class="test-link" onclick="startTest(${index})">Начать</a>
+                        <a class="test-link" onclick="copyTestLink(${index})">Копировать ссылку</a>
+                    </span>
+                `;
+                testList.appendChild(testItem);
+            });
+        }
+
         // Добавление вопроса
         function addQuestion() {
-            console.log('Добавление вопроса');
             const question = {
                 text: document.getElementById('question-text').value || 'Без текста',
                 type: document.getElementById('question-type').value,
@@ -140,7 +156,6 @@
 
         // Очистка формы вопроса
         function clearQuestionForm() {
-            console.log('Очистка формы вопроса');
             document.getElementById('question-text').value = '';
             document.getElementById('question-time').value = '';
             document.querySelectorAll('.option').forEach(opt => opt.value = '');
@@ -151,7 +166,6 @@
 
         // Рендеринг списка вопросов
         function renderQuestions() {
-            console.log('Рендеринг вопросов:', currentTest.questions);
             const questionList = document.getElementById('question-list');
             questionList.innerHTML = '';
             currentTest.questions.forEach((question, index) => {
@@ -171,39 +185,49 @@
 
         // Удаление вопроса
         function deleteQuestion(index) {
-            console.log('Удаление вопроса:', index);
             currentTest.questions.splice(index, 1);
             renderQuestions();
         }
 
-        // Сохранение теста (закомментировано для пользовательских тестов)
-        /*
-        function saveTest() {
-            console.log('Сохранение теста');
+        // Сохранение теста
+        async function saveTest() {
             const test = {
                 title: document.getElementById('test-title').value || 'Без названия',
                 time: parseInt(document.getElementById('test-time').value) || null,
                 questions: currentTest.questions
             };
-            userTests.push(test);
-            alert('Тест сохранен!');
-            document.getElementById('test-title').value = '';
-            document.getElementById('test-time').value = '';
-            currentTest = { questions: [] };
-            renderQuestions();
+            if (!test.title || test.questions.length === 0) {
+                alert('Введите название теста и добавьте хотя бы один вопрос!');
+                return;
+            }
+            serverTests.push(test);
+            try {
+                // Симуляция сохранения на сервер (в реальном проекте нужен API)
+                await fetch('tests.json', {
+                    method: 'PUT', // В реальном проекте используйте POST или API
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(serverTests)
+                });
+                alert('Тест успешно сохранен!');
+                document.getElementById('test-title').value = '';
+                document.getElementById('test-time').value = '';
+                currentTest = { questions: [] };
+                renderQuestions();
+                renderTestList();
+            } catch (e) {
+                console.error('Ошибка сохранения теста:', e);
+                alert('Ошибка при сохранении теста!');
+            }
         }
-        */
 
         // Тип вопроса
         document.getElementById('question-type').addEventListener('change', (e) => {
-            console.log('Смена типа вопроса:', e.target.value);
             document.getElementById('multiple-options').style.display = e.target.value === 'multiple' ? 'block' : 'none';
             document.getElementById('text-answer').style.display = e.target.value === 'text' ? 'block' : 'none';
         });
 
         // Начало теста
         function startTest(index) {
-            console.log('Начало теста:', index);
             currentTest = serverTests[index];
             currentQuestion = 0;
             document.querySelector('.test-list').style.display = 'none';
@@ -214,7 +238,6 @@
 
         // Загрузка вопроса
         function loadQuestion() {
-            console.log('Загрузка вопроса:', currentQuestion);
             const question = currentTest.questions[currentQuestion];
             const questionDiv = document.querySelector('.question');
             questionDiv.innerHTML = '';
@@ -248,7 +271,6 @@
 
         // Таймер
         function startTimer() {
-            console.log('Запуск таймера');
             clearInterval(timer);
             const question = currentTest.questions[currentQuestion];
             const time = question.time || currentTest.time;
@@ -267,7 +289,6 @@
 
         // Отправка ответа
         function submitAnswer() {
-            console.log('Отправка ответа');
             const question = currentTest.questions[currentQuestion];
             let correct = false;
             if (question.type === 'multiple') {
@@ -282,7 +303,6 @@
 
         // Следующий вопрос
         function nextQuestion() {
-            console.log('Переход к следующему вопросу');
             currentQuestion++;
             if (currentQuestion >= currentTest.questions.length) {
                 clearInterval(timer);
@@ -297,13 +317,11 @@
 
         // Копирование ссылки
         function copyTestLink(index) {
-            console.log('Копирование ссылки:', index);
             const url = `${window.location.origin}/?test=${index}`;
             navigator.clipboard.writeText(url).then(() => alert('Ссылка скопирована!'));
         }
 
         // Инициализация
-        console.log('Инициализация приложения');
         loadTests();
     </script>
 </body>
