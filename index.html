@@ -70,8 +70,8 @@
         let totalQuestions = 0;
 
         // Настройки
-        const allowSkipQuestions = true; // Разрешить переход без ответа
-        const allowOverwriteAnswers = false; // Разрешить пересохранение ответов
+        const allowSkipQuestions = false; // Запретить переход без сохранения ответа
+        const allowOverwriteAnswers = false; // Запретить пересохранение ответов
 
         // Переключение темы
         function toggleTheme() {
@@ -184,9 +184,11 @@
             if (!allowOverwriteAnswers && answers[currentQuestion] !== null) {
                 saveButton.textContent = 'На вопрос уже дан ответ';
                 saveButton.disabled = true;
+                saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
             } else {
                 saveButton.textContent = 'Сохранить ответ';
                 saveButton.disabled = false;
+                saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
             }
             // Управление видимостью кнопок навигации
             const prevButton = document.querySelector('.prev-btn');
@@ -203,12 +205,14 @@
             progress.style.width = `${percentage}%`;
         }
 
-        // Таймер
+        // Таймер для всего теста
         function startTimer() {
             clearInterval(timer);
-            const question = currentTest.questions[currentQuestion];
-            const time = question.time || currentTest.time;
-            if (!time) return;
+            const time = currentTest.time;
+            if (!time) {
+                document.querySelector('.timer').textContent = '';
+                return;
+            }
             let seconds = time;
             document.querySelector('.timer').textContent = `Осталось: ${seconds} сек`;
             timer = setInterval(() => {
@@ -216,7 +220,14 @@
                 document.querySelector('.timer').textContent = `Осталось: ${seconds} сек`;
                 if (seconds <= 0) {
                     clearInterval(timer);
-                    nextQuestion();
+                    calculateScore();
+                    document.querySelector('.test-questions').style.display = 'none';
+                    document.querySelector('.test-results').style.display = 'block';
+                    document.getElementById('score').textContent = score;
+                    document.getElementById('total').textContent = totalQuestions;
+                    const percentage = Math.round((score / totalQuestions) * 100);
+                    document.getElementById('percentage').textContent = percentage + '%';
+                    alert('Время теста истекло!');
                 }
             }, 1000);
         }
@@ -226,9 +237,17 @@
             const question = currentTest.questions[currentQuestion];
             if (question.type === 'multiple') {
                 const selected = document.querySelector('input[name="answer"]:checked');
-                answers[currentQuestion] = selected ? parseInt(selected.value) : null;
+                if (!selected) {
+                    alert('Пожалуйста, выберите ответ!');
+                    return;
+                }
+                answers[currentQuestion] = parseInt(selected.value);
             } else {
                 const answer = document.getElementById('text-answer').value;
+                if (!answer.trim()) {
+                    alert('Пожалуйста, введите ответ!');
+                    return;
+                }
                 answers[currentQuestion] = answer;
             }
             nextQuestion();
@@ -240,36 +259,30 @@
                 currentQuestion--;
                 updateProgressBar();
                 loadQuestion();
-                startTimer();
             }
         }
 
         // Переход к следующему вопросу
         function nextQuestion() {
-            if (!allowSkipQuestions && answers[currentQuestion] === null) {
-                const confirmAction = confirm('Вы не сохранили ответ. Хотите сохранить перед переходом? Нажмите "OK" для сохранения, "Отмена" для перехода без сохранения.');
-                if (confirmAction) {
-                    saveAnswer();
+            if (answers[currentQuestion] === null) {
+                if (!allowSkipQuestions) {
+                    alert('Вы не сохранили ответ. Пожалуйста, сохраните ответ перед переходом!');
+                    return;
                 } else {
-                    currentQuestion++;
-                    if (currentQuestion >= totalQuestions) {
-                        finishTest();
+                    const confirmAction = confirm('Вы не сохранили ответ. Хотите сохранить перед переходом? Нажмите "OK" для сохранения, "Отмена" для перехода без сохранения.');
+                    if (confirmAction) {
+                        saveAnswer();
                         return;
                     }
-                    updateProgressBar();
-                    loadQuestion();
-                    startTimer();
                 }
-            } else {
-                currentQuestion++;
-                if (currentQuestion >= totalQuestions) {
-                    finishTest();
-                    return;
-                }
-                updateProgressBar();
-                loadQuestion();
-                startTimer();
             }
+            currentQuestion++;
+            if (currentQuestion >= totalQuestions) {
+                finishTest();
+                return;
+            }
+            updateProgressBar();
+            loadQuestion();
         }
 
         // Завершение тестирования
