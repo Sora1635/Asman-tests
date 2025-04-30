@@ -289,6 +289,21 @@
         function finishTest() {
             const confirmation = prompt('Введите "finish", чтобы подтвердить завершение теста');
             if (confirmation && confirmation.toLowerCase() === 'finish') {
+                // Сохранение ответа на последнем вопросе, если он выбран
+                if (currentQuestion === totalQuestions - 1 && answers[currentQuestion] === null) {
+                    const question = currentTest.questions[currentQuestion];
+                    if (question.type === 'multiple') {
+                        const selected = document.querySelector('input[name="answer"]:checked');
+                        if (selected) {
+                            answers[currentQuestion] = parseInt(selected.value);
+                        }
+                    } else {
+                        const answer = document.getElementById('text-answer').value;
+                        if (answer.trim()) {
+                            answers[currentQuestion] = answer;
+                        }
+                    }
+                }
                 clearInterval(timer);
                 calculateScore();
                 document.querySelector('.test-questions').style.display = 'none';
