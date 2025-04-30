@@ -9,7 +9,16 @@
 </head>
 <body>
     <header>
-        <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+        <div class="left-header">
+            <button class="nav-toggle" onclick="toggleNav()"><i class="fas fa-bars"></i></button>
+            <nav class="nav-menu">
+                <a href="#" onclick="switchPage('home')">Главная</a>
+                <a href="#" onclick="switchPage('take')">Пройти тест</a>
+            </nav>
+        </div>
+        <div class="right-header">
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+        </div>
     </header>
 
     <div class="container">
@@ -17,7 +26,7 @@
             <h1>Пройди увлекательные тесты!</h1>
             <p>Проверь свои знания и узнай свой результат!</p>
             <div class="home-buttons">
-                <button class="action-btn" onclick="goToTests()"><i class="fas fa-play"></i> Тесты</button>
+                <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Тесты</button>
             </div>
         </div>
 
@@ -25,18 +34,29 @@
             <h1>Выбери тест</h1>
             <div class="test-list"></div>
             <div class="test-content" style="display: none;">
-                <div class="progress-bar">
-                    <div class="progress"></div>
+                <div class="test-questions">
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="timer"></div>
+                    <div class="question-number"></div>
+                    <div class="question"></div>
+                    <div class="navigation">
+                        <button onclick="prevQuestion()" class="nav-btn"><i class="fas fa-arrow-left"></i> Назад</button>
+                        <button onclick="nextQuestion()" class="nav-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
+                    </div>
+                    <div class="button-group">
+                        <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
+                        <button class="finish-btn" onclick="finishTest()">Завершить тест</button>
+                        <button class="reset-btn" onclick="resetTest()">Сбросить тест</button>
+                    </div>
                 </div>
-                <div class="timer"></div>
-                <div class="question-number"></div>
-                <div class="question"></div>
-                <div class="navigation">
-                    <button onclick="prevQuestion()" class="nav-btn"><i class="fas fa-arrow-left"></i> Назад</button>
-                    <button onclick="nextQuestion()" class="nav-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
+                <div class="test-results" style="display: none;">
+                    <h2>Результаты теста</h2>
+                    <p>Ваш балл: <span id="score"></span> из <span id="total"></span></p>
+                    <p>Процент правильных ответов: <span id="percentage"></span></p>
+                    <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Вернуться к списку тестов</button>
                 </div>
-                <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
-                <button class="finish-btn" onclick="finishTest()">Завершить тест</button>
             </div>
         </div>
     </div>
@@ -64,11 +84,17 @@
             toggle.classList.toggle('fa-sun');
         }
 
-        // Переход к тестам
-        function goToTests() {
+        // Переключение навигационного меню
+        function toggleNav() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        }
+
+        // Переключение страниц
+        function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById('take').classList.add('active');
-            loadTests();
+            document.getElementById(pageId).classList.add('active');
+            if (pageId === 'take') loadTests();
+            document.querySelector('.nav-menu').classList.remove('active');
         }
 
         // Загрузка тестов
@@ -86,6 +112,8 @@
         function renderTestList() {
             const testList = document.querySelector('.test-list');
             testList.innerHTML = '';
+            document.querySelector('.test-content').style.display = 'none';
+            document.querySelector('.test-list').style.display = 'block';
             serverTests.forEach((test, index) => {
                 const testItem = document.createElement('div');
                 testItem.className = 'test-item card';
@@ -106,6 +134,8 @@
             answers = new Array(totalQuestions).fill(null);
             document.querySelector('.test-list').style.display = 'none';
             document.querySelector('.test-content').style.display = 'block';
+            document.querySelector('.test-questions').style.display = 'block';
+            document.querySelector('.test-results').style.display = 'none';
             updateProgressBar();
             loadQuestion();
             startTimer();
@@ -222,14 +252,32 @@
             startTimer();
         }
 
-        // Завершение теста
+        // Завершение тестирования
         function finishTest() {
-            clearInterval(timer);
-            calculateScore();
-            document.querySelector('.test-content').style.display = 'none';
-            document.querySelector('.test-list').style.display = 'block';
-            const percentage = Math.round((score / totalQuestions) * 100);
-            alert(`Тест завершен! Ваш результат: ${score}/${totalQuestions} (${percentage}%)`);
+            const confirmation = prompt('Введите "finish", чтобы подтвердить завершение теста');
+            if (confirmation && confirmation.toLowerCase() === 'finish') {
+                clearInterval(timer);
+                calculateScore();
+                document.querySelector('.test-questions').style.display = 'none';
+                document.querySelector('.test-results').style.display = 'block';
+                document.getElementById('score').textContent = score;
+                document.getElementById('total').textContent = totalQuestions;
+                const percentage = Math.round((score / totalQuestions) * 100);
+                document.getElementById('percentage').textContent = percentage + '%';
+            } else {
+                alert('Завершение теста отменено');
+            }
+        }
+
+        // Сброс теста
+        function resetTest() {
+            if (confirm('Вы уверены, что хотите сбросить тест?')) {
+                currentQuestion = 0;
+                answers = new Array(totalQuestions).fill(null);
+                updateProgressBar();
+                loadQuestion();
+                startTimer();
+            }
         }
 
         // Подсчет баллов

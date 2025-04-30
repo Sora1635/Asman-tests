@@ -20,7 +20,7 @@
     --accent: #4dd0e1; /* Светлый бирюзовый */
     --background: #0d1b2a; /* Темный фон */
     --text: #e0e0e0; /* Светлый текст */
-    --card-bg: #1b263b; /* Темный фон карточек */
+    --card-bg: #1b263b;Jonah /* Темный фон карточек */
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     --answered: #81c784; /* Светлый зеленый */
 }
@@ -49,7 +49,8 @@ body {
 /* Шапка */
 header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     padding: 16px 24px;
     background: var(--card-bg);
     box-shadow: var(--shadow);
@@ -57,6 +58,55 @@ header {
     top: 0;
     z-index: 1000;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.left-header, .right-header {
+    display: flex;
+    align-items: center;
+}
+
+.nav-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    margin-right: 16px;
+    transition: var(--transition);
+}
+
+.nav-toggle:hover {
+    transform: rotate(90deg);
+}
+
+.nav-menu {
+    display: none;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    border-radius: var(--border-radius);
+    position: absolute;
+    top: 60px;
+    left: 24px;
+    z-index: 1000;
+}
+
+.nav-menu.active {
+    display: block;
+}
+
+.nav-menu a {
+    display: block;
+    margin: 8px 0;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+}
+
+.nav-menu a:hover {
+    color: var(--primary-dark);
 }
 
 .theme-toggle {
@@ -76,10 +126,13 @@ header {
 .page {
     display: none;
     padding: 48px 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .page.active {
     display: block;
+    opacity: 1;
 }
 
 h1 {
@@ -89,6 +142,13 @@ h1 {
     letter-spacing: 0.5px;
     color: var(--text);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text);
 }
 
 p {
@@ -153,7 +213,7 @@ button {
     cursor: pointer;
     font-weight: 600;
     font-size: 1rem;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     transition: var(--transition);
@@ -183,11 +243,20 @@ button:disabled {
 
 /* Кнопка завершения */
 .finish-btn {
-    background: linear-gradient(45deg, var(--success), var(--accent));
+    background: linear-gradient(45deg, #d32f2f, #f44336);
 }
 
 .finish-btn:hover {
-    background: linear-gradient(45deg, var(--success), var(--primary));
+    background: linear-gradient(45deg, #b71c1c, #d32f2f);
+}
+
+/* Кнопка сброса */
+.reset-btn {
+    background: linear-gradient(45deg, #ff9800, #ffb300);
+}
+
+.reset-btn:hover {
+    background: linear-gradient(45deg, #f57c00, #ff9800);
 }
 
 /* Прогресс-бар */
@@ -225,6 +294,15 @@ button:disabled {
     display: flex;
     justify-content: space-between;
     margin: 20px 0;
+}
+
+/* Группа кнопок */
+.button-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 /* Поля ввода */
@@ -309,6 +387,21 @@ input:focus, textarea:focus {
     margin-right: 12px;
 }
 
+/* Результаты теста */
+.test-results {
+    text-align: center;
+}
+
+.test-results p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.test-results span {
+    font-weight: 600;
+    color: var(--primary);
+}
+
 /* Анимации */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -327,6 +420,10 @@ input:focus, textarea:focus {
         font-size: 2rem;
     }
 
+    h2 {
+        font-size: 1.6rem;
+    }
+
     .container {
         padding: 16px;
     }
@@ -341,7 +438,17 @@ input:focus, textarea:focus {
         gap: 10px;
     }
 
+    .button-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+
     .card {
         padding: 16px;
+    }
+
+    .nav-menu {
+        left: 16px;
+        top: 56px;
     }
 }
