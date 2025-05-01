@@ -1,542 +1,542 @@
 /* Переменные для цветовой палитры */
 :root {
- --primary: #2196f3; /* Яркий синий */
- --primary-dark: #1565c0; /* Темный синий */
- --accent: #26c6da; /* Бирюзовый */
- --background: #e3f2fd; /* Светлый голубой фон */
- --text: #0d47a1; /* Темно-синий текст */
- --card-bg: #ffffff; /* Белый фон карточек */
- --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
- --error: #d32f2f; /* Красный для ошибок */
- --success: #2e7d32; /* Зеленый для успеха */
- --answered: #4caf50; /* Зеленый для отвеченных вопросов */
- --border-radius: 16px;
- --transition: all 0.3s ease;
+    --primary: #2196f3; /* Яркий синий */
+    --primary-dark: #1565c0; /* Темный синий */
+    --accent: #26c6da; /* Бирюзовый */
+    --background: #e3f2fd; /* Светлый голубой фон */
+    --text: #0d47a1; /* Темно-синий текст */
+    --card-bg: #ffffff; /* Белый фон карточек */
+    --shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    --error: #d32f2f; /* Красный для ошибок */
+    --success: #2e7d32; /* Зеленый для успеха */
+    --answered: #4caf50; /* Зеленый для отвеченных вопросов */
+    --border-radius: 16px;
+    --transition: all 0.3s ease;
 }
 
 .dark {
- --primary: #64b5f6; /* Светлый синий */
- --primary-dark: #90caf9; /* Очень светлый синий */
- --accent: #4dd0e1; /* Светлый бирюзовый */
- --background: #0d1b2a; /* Темный фон */
- --text: #e0e0e0; /* Светлый текст */
- --card-bg: #1b263b; /* Темный фон карточек */
- --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
- --answered: #81c784; /* Светлый зеленый */
+    --primary: #64b5f6; /* Светлый синий */
+    --primary-dark: #90caf9; /* Очень светлый синий */
+    --accent: #4dd0e1; /* Светлый бирюзовый */
+    --background: #0d1b2a; /* Темный фон */
+    --text: #e0e0e0; /* Светлый текст */
+    --card-bg: #1b263b; /* Темный фон карточек */
+    --shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    --answered: #81c784; /* Светлый зеленый */
 }
 
 /* Общие стили */
 * {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
- font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
- background: linear-gradient(135deg, var(--background), #bbdefb);
- color: var(--text);
- transition: var(--transition);
- min-height: 100vh;
+    background: linear-gradient(135deg, var(--background), #bbdefb);
+    color: var(--text);
+    transition: var(--transition);
+    min-height: 100vh;
 }
 
 .container {
- max-width: 1280px;
- margin: 0 auto;
- padding: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
 }
 
 /* Шапка */
 header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 16px 24px;
- background: var(--card-bg);
- box-shadow: var(--shadow);
- position: sticky;
- top: 0;
- z-index: 1000;
- border-radius: 0 0 var(--border-radius) var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .left-header, .right-header {
- display: flex;
- align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .nav-toggle {
- background: none;
- border: none;
- font-size: 1.5rem;
- cursor: pointer;
- color: var(--text);
- margin-right: 16px;
- transition: var(--transition);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    margin-right: 16px;
+    transition: var(--transition);
 }
 
 .nav-toggle:hover {
- transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
 .nav-menu {
- display: none;
- background: var(--card-bg);
- box-shadow: var(--shadow);
- padding: 16px;
- border-radius: var(--border-radius);
- position: absolute;
- top: 60px;
- left: 24px;
- z-index: 1000;
+    display: none;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    border-radius: var(--border-radius);
+    position: absolute;
+    top: 60px;
+    left: 24px;
+    z-index: 1000;
 }
 
 .nav-menu.active {
- display: block;
+    display: block;
 }
 
 .nav-menu a {
- display: block;
- margin: 8px 0;
- text-decoration: none;
- color: var(--primary);
- font-weight: 600;
- font-size: 1.1rem;
- transition: var(--transition);
+    display: block;
+    margin: 8px 0;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
 }
 
 .nav-menu a:hover {
- color: var(--primary-dark);
+    color: var(--primary-dark);
 }
 
 .theme-toggle {
- background: none;
- border: none;
- font-size: 1.5rem;
- cursor: pointer;
- color: var(--text);
- transition: var(--transition);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    transition: var(--transition);
 }
 
 .theme-toggle:hover {
- transform: rotate(20deg);
+    transform: rotate(20deg);
 }
 
 /* Страницы */
 .page {
- display: none;
- padding: 48px 0;
- opacity: 0;
- transition: opacity 0.5s ease;
+    display: none;
+    padding: 48px 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .page.active {
- display: block;
- opacity: 1;
+    display: block;
+    opacity: 1;
 }
 
 h1 {
- font-size: 2.8rem;
- margin-bottom: 24px;
- text-align: center;
- letter-spacing: 0.5px;
- color: var(--text);
- text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 2.8rem;
+    margin-bottom: 24px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
- font-size: 2rem;
- margin-bottom: 20px;
- text-align: center;
- color: var(--text);
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text);
 }
 
 p {
- font-size: 1.2rem;
- line-height: 1.6;
- text-align: center;
- margin-bottom: 24px;
- color: var(--text);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--text);
 }
 
 /* Кнопки на главной */
 .home-buttons {
- display: flex;
- justify-content: center;
- margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
 }
 
 .action-btn {
- padding: 15px 30px;
- background: linear-gradient(45deg, var(--primary), var(--accent));
- color: #fff;
- border: none;
- border-radius: var(--border-radius);
- cursor: pointer;
- font-weight: 700;
- font-size: 1.2rem;
- display: flex;
- align-items: center;
- gap: 10px;
- box-shadow: var(--shadow);
- transition: var(--transition);
+    padding: 15px 30px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
 }
 
 .action-btn:hover {
- background: linear-gradient(45deg, var(--primary-dark), var(--primary));
- transform: scale(1.05);
- box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Карточки */
 .card {
- background: var(--card-bg);
- padding: 24px;
- border-radius: var(--border-radius);
- box-shadow: var(--shadow);
- margin-bottom: 24px;
- transition: var(--transition);
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+    transition: var(--transition);
 }
 
 .card:hover {
- transform: translateY(-8px);
- box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Кнопки */
 button {
- padding: 12px 24px;
- background: linear-gradient(45deg, var(--primary), var(--accent));
- color: #fff;
- border: none;
- border-radius: var(--border-radius);
- cursor: pointer;
- font-weight: 600;
- font-size: 1rem;
- display: inline-flex;
- align-items: center;
- gap: 8px;
- transition: var(--transition);
+    padding: 12px 24px;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
 }
 
 button:hover {
- background: linear-gradient(45deg, var(--primary-dark), var(--primary));
- transform: scale(1.05);
- box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 button:disabled {
- background: #b0bec5;
- cursor: not-allowed;
- transform: none;
- box-shadow: none;
+    background: #b0bec5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Навигационные кнопки */
 .nav-btn {
- background: linear-gradient(45deg, var(--accent), var(--primary));
+    background: linear-gradient(45deg, var(--accent), var(--primary));
 }
 
 .nav-btn:hover {
- background: linear-gradient(45deg, var(--primary), var(--accent));
+    background: linear-gradient(45deg, var(--primary), var(--accent));
 }
 
 /* Кнопка завершения */
 .finish-btn {
- background: linear-gradient(45deg, #d32f2f, #f44336);
+    background: linear-gradient(45deg, #d32f2f, #f44336);
 }
 
 .finish-btn:hover {
- background: linear-gradient(45deg, #b71c1c, #d32f2f);
+    background: linear-gradient(45deg, #b71c1c, #d32f2f);
 }
 
 /* Прогресс-бар */
 .progress-bar {
- width: 100%;
- height: 10px;
- background: #e0e0e0;
- border-radius: var(--border-radius);
- margin-bottom: 20px;
- overflow: hidden;
+    width: 100%;
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    overflow: hidden;
 }
 
 .progress {
- height: 100%;
- background: linear-gradient(45deg, var(--primary), var(--accent));
- width: 0;
- transition: width 0.3s ease;
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    width: 0;
+    transition: width 0.3s ease;
 }
 
 /* Номер вопроса */
 .question-number {
- font-size: 1.3rem;
- font-weight: 600;
- text-align: center;
- margin-bottom: 20px;
- color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
 }
 
 .question-number.answered {
- color: var(--answered);
+    color: var(--answered);
 }
 
 /* Навигация */
 .navigation {
- display: flex;
- justify-content: space-between;
- margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
 }
 
 /* Группа кнопок */
 .button-group {
- display: flex;
- justify-content: center;
- flex-wrap: wrap;
- gap: 10px;
- margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 /* Поля ввода */
 input, textarea {
- width: 100%;
- padding: 12px;
- margin: 12px 0;
- border: 2px solid var(--primary-dark);
- border-radius: var(--border-radius);
- background: var(--card-bg);
- color: var(--text);
- font-size: 1rem;
- transition: var(--transition);
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 2px solid var(--primary-dark);
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 1rem;
+    transition: var(--transition);
 }
 
 input:focus, textarea:focus {
- border-color: var(--primary);
- background: #fff;
- box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
- outline: none;
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    outline: none;
 }
 
 /* Список тестов */
 .test-list .test-item {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 16px;
- transition: var(--transition);
- border-left: 4px solid var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    transition: var(--transition);
+    border-left: 4px solid var(--primary);
 }
 
 .test-link {
- color: var(--primary);
- cursor: pointer;
- font-weight: 500;
- transition: var(--transition);
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
 }
 
 .test-link:hover {
- color: var(--primary-dark);
- text-decoration: underline;
+    color: var(--primary-dark);
+    text-decoration: underline;
 }
 
 /* Таймер */
 .timer {
- font-size: 1.3rem;
- color: var(--error);
- margin-bottom: 24px;
- font-weight: 600;
- text-align: center;
- animation: pulse 1s infinite;
+    font-size: 1.3rem;
+    color: var(--error);
+    margin-bottom: 24px;
+    font-weight: 600;
+    text-align: center;
+    animation: pulse 1s infinite;
 }
 
 /* Изображения вопросов */
 .question-image {
- max-width: 100%;
- border-radius: var(--border-radius);
- margin: 12px 0;
- box-shadow: var(--shadow);
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    margin: 12px 0;
+    box-shadow: var(--shadow);
 }
 
 /* Варианты ответа */
 .answer-option {
- display: flex;
- align-items: center;
- padding: 12px;
- margin: 8px 0;
- background: var(--card-bg);
- border: 1px solid var(--primary-dark);
- border-radius: var(--border-radius);
- cursor: pointer;
- transition: var(--transition);
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin: 8px 0;
+    background: var(--card-bg);
+    border: 1px solid var(--primary-dark);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
 }
 
 .answer-option:hover {
- background: var(--accent);
- transform: translateX(8px);
+    background: var(--accent);
+    transform: translateX(8px);
 }
 
 .answer-option input {
- margin-right: 12px;
+    margin-right: 12px;
 }
 
 /* Результаты теста */
 .test-results {
- text-align: center;
+    text-align: center;
 }
 
 .test-results p {
- font-size: 1.2rem;
- margin: 10px 0;
+    font-size: 1.2rem;
+    margin: 10px 0;
 }
 
 .test-results span {
- font-weight: 600;
- color: var(--primary);
+    font-weight: 600;
+    color: var(--primary);
 }
 
 /* Модальное окно */
 .modal {
- display: none;
- position: fixed;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- background: rgba(0, 0, 0, 0.5);
- z-index: 2000;
- justify-content: center;
- align-items: center;
- animation: fadeIn 0.3s ease;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
- background: var(--card-bg);
- padding: 24px;
- border-radius: var(--border-radius);
- box-shadow: var(--shadow);
- max-width: 500px;
- width: 90%;
- text-align: center;
- animation: slideIn 0.3s ease;
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    animation: slideIn 0.3s ease;
 }
 
 .modal-content h2 {
- margin-bottom: 16px;
- color: var(--text);
+    margin-bottom: 16px;
+    color: var(--text);
 }
 
 .modal-content p {
- margin-bottom: 20px;
- color: var(--text);
+    margin-bottom: 20px;
+    color: var(--text);
 }
 
 .modal-input {
- margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .modal-input input {
- width: 100%;
- padding: 10px;
- border: 2px solid var(--primary-dark);
- border-radius: var(--border-radius);
- background: var(--card-bg);
- color: var(--text);
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--primary-dark);
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    color: var(--text);
 }
 
 .modal-input input:focus {
- border-color: var(--primary);
- background: #fff;
+    border-color: var(--primary);
+    background: #fff;
 }
 
 .modal-buttons {
- display: flex;
- justify-content: center;
- gap: 10px;
- flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .modal-buttons button {
- padding: 10px 20px;
- font-size: 1rem;
+    padding: 10px 20px;
+    font-size: 1rem;
 }
 
 .modal-save, .modal-confirm {
- background: linear-gradient(45deg, var(--primary), var(--accent));
+    background: linear-gradient(45deg, var(--primary), var(--accent));
 }
 
 .modal-save:hover, .modal-confirm:hover {
- background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary));
 }
 
 .modal-continue, .modal-cancel {
- background: linear-gradient(45deg, var(--error), #f44336);
+    background: linear-gradient(45deg, var(--error), #f44336);
 }
 
 .modal-continue:hover, .modal-cancel:hover {
- background: linear-gradient(45deg, #b71c1c, var(--error));
+    background: linear-gradient(45deg, #b71c1c, var(--error));
 }
 
 /* Анимации */
 @keyframes fadeIn {
- from { opacity: 0; }
- to { opacity: 1; }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideIn {
- from { transform: translateY(-20px); opacity: 0; }
- to { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes pulse {
- 0% { transform: scale(1); }
- 50% { transform: scale(1.05); }
- 100% { transform: scale(1); }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
- h1 {
- font-size: 2rem;
- }
+    h1 {
+        font-size: 2rem;
+    }
 
- h2 {
- font-size: 1.6rem;
- }
+    h2 {
+        font-size: 1.6rem;
+    }
 
- .container {
- padding: 16px;
- }
+    .container {
+        padding: 16px;
+    }
 
- button {
- padding: 10px 16px;
- font-size: 0.9rem;
- }
+    button {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
 
- .navigation {
- flex-direction: column;
- gap: 10px;
- }
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
 
- .button-group {
- flex-direction: column;
- gap: 8px;
- }
+    .button-group {
+        flex-direction: column;
+        gap: 8px;
+    }
 
- .card {
- padding: 16px;
- }
+    .card {
+        padding: 16px;
+    }
 
- .nav-menu {
- left: 16px;
- top: 56px;
- }
+    .nav-menu {
+        left: 16px;
+        top: 56px;
+    }
 
- .modal-content {
- padding: 16px;
- width: 95%;
- }
+    .modal-content {
+        padding: 16px;
+        width: 95%;
+    }
 
- .modal-buttons {
- flex-direction: column;
- gap: 8px;
- }
+    .modal-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
 }
