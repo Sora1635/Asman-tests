@@ -163,6 +163,7 @@ p {
 .home-buttons {
     display: flex;
     justify-content: center;
+    gap: 20px;
     margin-top: 30px;
 }
 
@@ -250,6 +251,16 @@ button:disabled {
     background: linear-gradient(45deg, #b71c1c, #d32f2f);
 }
 
+/* Кнопка очистки результатов */
+.clear-results {
+    background: linear-gradient(45deg, #d32f2f, #f44336);
+    margin-top: 20px;
+}
+
+.clear-results:hover {
+    background: linear-gradient(45deg, #b71c1c, #d32f2f);
+}
+
 /* Прогресс-бар */
 .progress-bar {
     width: 100%;
@@ -297,7 +308,7 @@ button:disabled {
 }
 
 /* Поля ввода */
-input, textarea {
+input, textarea, select {
     width: 100%;
     padding: 12px;
     margin: 12px 0;
@@ -309,7 +320,7 @@ input, textarea {
     transition: var(--transition);
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
     border-color: var(--primary);
     background: #fff;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
@@ -393,6 +404,55 @@ input:focus, textarea:focus {
     color: var(--primary);
 }
 
+/* Страница результатов */
+.results-filter {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.results-filter label {
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.results-filter select {
+    width: auto;
+    max-width: 300px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.results-table th, .results-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.results-table th {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    color: #fff;
+    font-weight: 600;
+}
+
+.results-table tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.results-table tr:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
 /* Модальное окно */
 .modal {
     display: none;
@@ -468,11 +528,11 @@ input:focus, textarea:focus {
 }
 
 .modal-continue, .modal-cancel {
-    background: linear-gradient(45deg, var(--error), #f44336);
+    background: linear-gradient(45deg, #d32f2f, #f44336);
 }
 
 .modal-continue:hover, .modal-cancel:hover {
-    background: linear-gradient(45deg, #b71c1c, var(--error));
+    background: linear-gradient(45deg, #b71c1c, #d32f2f);
 }
 
 /* Анимации */
@@ -538,5 +598,25 @@ input:focus, textarea:focus {
     .modal-buttons {
         flex-direction: column;
         gap: 8px;
+    }
+
+    .results-table {
+        font-size: 0.9rem;
+    }
+
+    .results-table th, .results-table td {
+        padding: 8px;
+    }
+
+    .results-filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .results-table {
+        display: block;
+        overflow-x: auto;
     }
 }

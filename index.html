@@ -14,9 +14,11 @@
             <nav class="nav-menu">
                 <a href="#" onclick="switchPage('home')">Главная</a>
                 <a href="#" onclick="switchPage('take')">Пройти тест</a>
+                <a href="#" onclick="switchPage('results')">Результаты</a>
             </nav>
         </div>
         <div class="right-header">
+            <span id="student-name" style="margin-right: 16px; color: var(--text);"></span>
             <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
         </div>
     </header>
@@ -27,6 +29,7 @@
             <p>Проверь свои знания и узнай свой результат!</p>
             <div class="home-buttons">
                 <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Тесты</button>
+                <button class="action-btn" onclick="switchPage('results')"><i class="fas fa-chart-bar"></i> Результаты</button>
             </div>
         </div>
 
@@ -55,8 +58,32 @@
                     <p>Ваш балл: <span id="score"></span> из <span id="total"></span></p>
                     <p>Процент правильных ответов: <span id="percentage"></span></p>
                     <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Вернуться к списку тестов</button>
+                    <button class="action-btn" onclick="switchPage('results')"><i class="fas fa-chart-bar"></i> Посмотреть все результаты</button>
                 </div>
             </div>
+        </div>
+
+        <div class="page" id="results">
+            <h1>Результаты тестов</h1>
+            <div class="results-filter">
+                <label for="test-filter">Фильтр по тесту:</label>
+                <select id="test-filter" onchange="renderResults()">
+                    <option value="">Все тесты</option>
+                </select>
+            </div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Ученик</th>
+                        <th>Тест</th>
+                        <th>Баллы</th>
+                        <th>Процент</th>
+                        <th>Дата</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body"></tbody>
+            </table>
+            <button class="action-btn clear-results" onclick="clearResults()"><i class="fas fa-trash"></i> Очистить результаты</button>
         </div>
     </div>
 
@@ -79,6 +106,7 @@
         let answers = [];
         let score = 0;
         let totalQuestions = 0;
+        let studentName = '';
 
         // Настройки
         const allowSkipQuestions = false; // Запретить переход без сохранения ответа
@@ -105,6 +133,7 @@
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             if (pageId === 'take') loadTests();
+            if (pageId === 'results') renderResults();
             document.querySelector('.nav-menu').classList.remove('active');
         }
 
@@ -160,6 +189,15 @@
                 const response = await fetch('tests.json');
                 serverTests = await response.json();
                 renderTestList();
+                // Обновляем фильтр на странице результатов
+                const testFilter = document.getElementById('test-filter');
+                testFilter.innerHTML = '<option value="">Все тесты</option>';
+                serverTests.forEach(test => {
+                    const option = document.createElement('option');
+                    option.value = test.title;
+                    option.textContent = test.title;
+                    testFilter.appendChild(option);
+                });
             } catch (e) {
                 console.error('Ошибка загрузки тестов:', e);
                 showModal({
@@ -181,9 +219,39 @@
                 testItem.className = 'test-item card';
                 testItem.innerHTML = `
                     <span>${test.title}</span>
-                    <a class="test-link" onclick="startTest(${index})">Начать</a>
+                    <a class="test-link" onclick="promptStudentName(${index})">Начать</a>
                 `;
                 testList.appendChild(testItem);
+            });
+        }
+
+        // Запрос имени ученика
+        function promptStudentName(index) {
+            showModal({
+                title: 'Введите имя',
+                message: 'Пожалуйста, введите ваше имя перед началом теста.',
+                showInput: true,
+                inputPlaceholder: 'Имя ученика',
+                buttons: [
+                    {
+                        text: 'Начать тест',
+                        action: (name) => {
+                            if (name && name.trim()) {
+                                studentName = name.trim();
+                                document.getElementById('student-name').textContent = `Ученик: ${studentName}`;
+                                startTest(index);
+                            } else {
+                                showModal({
+                                    title: 'Ошибка',
+                                    message: 'Имя не может быть пустым!',
+                                    buttons: [{ text: 'ОК', action: () => promptStudentName(index) }]
+                                });
+                            }
+                        },
+                        className: 'modal-confirm'
+                    },
+                    { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
+                ]
             });
         }
 
@@ -291,6 +359,7 @@
                 if (seconds <= 0) {
                     clearInterval(timer);
                     calculateScore();
+                    saveResults();
                     document.querySelector('.test-questions').style.display = 'none';
                     document.querySelector('.test-results').style.display = 'block';
                     document.getElementById('score').textContent = score;
@@ -409,6 +478,7 @@
                             }
                             clearInterval(timer);
                             calculateScore();
+                            saveResults();
                             document.querySelector('.test-questions').style.display = 'none';
                             document.querySelector('.test-results').style.display = 'block';
                             document.getElementById('score').textContent = score;
@@ -441,6 +511,72 @@
                         score++;
                     }
                 }
+            });
+        }
+
+        // Сохранение результатов в localStorage
+        function saveResults() {
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const result = {
+                student: studentName,
+                test: currentTest.title,
+                score: score,
+                total: totalQuestions,
+                percentage: percentage,
+                date: new Date().toLocaleString('ru-RU')
+            };
+            let results = JSON.parse(localStorage.getItem('testResults') || '[]');
+            results.push(result);
+            localStorage.setItem('testResults', JSON.stringify(results));
+        }
+
+        // Рендеринг таблицы результатов
+        function renderResults() {
+            const resultsBody = document.getElementById('results-body');
+            const testFilter = document.getElementById('test-filter').value;
+            resultsBody.innerHTML = '';
+            let results = JSON.parse(localStorage.getItem('testResults') || '[]');
+            if (testFilter) {
+                results = results.filter(result => result.test === testFilter);
+            }
+            if (results.length === 0) {
+                resultsBody.innerHTML = '<tr><td colspan="5">Нет результатов</td></tr>';
+                return;
+            }
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.student}</td>
+                    <td>${result.test}</td>
+                    <td>${result.score}/${result.total}</td>
+                    <td>${result.percentage}%</td>
+                    <td>${result.date}</td>
+                `;
+                resultsBody.appendChild(row);
+            });
+        }
+
+        // Очистка результатов
+        function clearResults() {
+            showModal({
+                title: 'Подтверждение',
+                message: 'Вы уверены, что хотите очистить все результаты?',
+                buttons: [
+                    {
+                        text: 'Очистить',
+                        action: () => {
+                            localStorage.removeItem('testResults');
+                            renderResults();
+                            showModal({
+                                title: 'Успех',
+                                message: 'Результаты очищены!',
+                                buttons: [{ text: 'ОК', action: () => {} }]
+                            });
+                        },
+                        className: 'modal-confirm'
+                    },
+                    { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
+                ]
             });
         }
 
