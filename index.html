@@ -1,587 +1,633 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тестовая платформа</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Тестовая платформа</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <link rel="stylesheet" href="styles.css">
+ <!-- Firebase SDK -->
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
 </head>
 <body>
-    <header>
-        <div class="left-header">
-            <button class="nav-toggle" onclick="toggleNav()"><i class="fas fa-bars"></i></button>
-            <nav class="nav-menu">
-                <a href="#" onclick="switchPage('home')">Главная</a>
-                <a href="#" onclick="switchPage('take')">Пройти тест</a>
-                <a href="#" onclick="switchPage('results')">Результаты</a>
-            </nav>
-        </div>
-        <div class="right-header">
-            <span id="student-name" style="margin-right: 16px; color: var(--text);"></span>
-            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
-        </div>
-    </header>
+ <header>
+ <div class="left-header">
+ <button class="nav-toggle" onclick="toggleNav()"><i class="fas fa-bars"></i></button>
+ <nav class="nav-menu">
+ <a href="#" onclick="switchPage('home')">Главная</a>
+ <a href="#" onclick="switchPage('take')">Пройти тест</a>
+ <a href="#" onclick="switchPage('results')">Результаты</a>
+ </nav>
+ </div>
+ <div class="right-header">
+ <span id="student-name" style="margin-right: 16px; color: var(--text);"></span>
+ <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+ </div>
+ </header>
 
-    <div class="container">
-        <div class="page active" id="home">
-            <h1>Пройди увлекательные тесты!</h1>
-            <p>Проверь свои знания и узнай свой результат!</p>
-            <div class="home-buttons">
-                <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Тесты</button>
-                <button class="action-btn" onclick="switchPage('results')"><i class="fas fa-chart-bar"></i> Результаты</button>
-            </div>
-        </div>
+ <div class="container">
+ <div class="page active" id="home">
+ <h1>Пройди увлекательные тесты!</h1>
+ <p>Проверь свои знания и узнай свой результат!</p>
+ <div class="home-buttons">
+ <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Тесты</button>
+ <button class="action-btn" onclick="switchPage('results')"><i class="fas fa-chart-bar"></i> Результаты</button>
+ </div>
+ </div>
 
-        <div class="page" id="take">
-            <h1>Выбери тест</h1>
-            <div class="test-list"></div>
-            <div class="test-content" style="display: none;">
-                <div class="test-questions">
-                    <div class="progress-bar">
-                        <div class="progress"></div>
-                    </div>
-                    <div class="timer"></div>
-                    <div class="question-number"></div>
-                    <div class="question"></div>
-                    <div class="navigation">
-                        <button onclick="prevQuestion()" class="nav-btn prev-btn"><i class="fas fa-arrow-left"></i> Назад</button>
-                        <button onclick="nextQuestion()" class="nav-btn next-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
-                    </div>
-                    <div class="button-group">
-                        <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
-                        <button class="finish-btn" onclick="finishTest()">Завершить тест</button>
-                    </div>
-                </div>
-                <div class="test-results" style="display: none;">
-                    <h2>Результаты теста</h2>
-                    <p>Ваш балл: <span id="score"></span> из <span id="total"></span></p>
-                    <p>Процент правильных ответов: <span id="percentage"></span></p>
-                    <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Вернуться к списку тестов</button>
-                    <button class="action-btn" onclick="switchPage('results')"><i class="fas fa-chart-bar"></i> Посмотреть все результаты</button>
-                </div>
-            </div>
-        </div>
+ <div class="page" id="take">
+ <h1>Выбери тест</h1>
+ <div class="test-list"></div>
+ <div class="test-content" style="display: none;">
+ <div class="test-questions">
+ <div class="progress-bar">
+ <div class="progress"></div>
+ </div>
+ <div class="timer"></div>
+ <div class="question-number"></div>
+ <div class="question"></div>
+ <div class="navigation">
+ <button onclick="prevQuestion()" class="nav-btn prev-btn"><i class="fas fa-arrow-left"></i> Назад</button>
+ <button onclick="nextQuestion()" class="nav-btn next-btn"><i class="fas fa-arrow-right"></i> Вперед</button>
+ </div>
+ <div class="button-group">
+ <button id="save-answer" onclick="saveAnswer()">Сохранить ответ</button>
+ <button class="finish-btn" onclick="finishTest()">Завершить тест</button>
+ </div>
+ </div>
+ <div class="test-results" style="display: none;">
+ <h2>Результаты теста</h2>
+ <p>Ваш балл: <span id="score"></span> из <span id="total"></span></p>
+ <p>Процент правильных ответов: <span id="percentage"></span></p>
+ <button class="action-btn" onclick="switchPage('take')"><i class="fas fa-play"></i> Вернуться к списку тестов</button>
+ <button class="action-btn" onclick="switchPage('results')"><i class="fas fa-chart-bar"></i> Посмотреть все результаты</button>
+ </div>
+ </div>
+ </div>
 
-        <div class="page" id="results">
-            <h1>Результаты тестов</h1>
-            <div class="results-filter">
-                <label for="test-filter">Фильтр по тесту:</label>
-                <select id="test-filter" onchange="renderResults()">
-                    <option value="">Все тесты</option>
-                </select>
-            </div>
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Ученик</th>
-                        <th>Тест</th>
-                        <th>Баллы</th>
-                        <th>Процент</th>
-                        <th>Дата</th>
-                    </tr>
-                </thead>
-                <tbody id="results-body"></tbody>
-            </table>
-            <button class="action-btn clear-results" onclick="clearResults()"><i class="fas fa-trash"></i> Очистить результаты</button>
-        </div>
-    </div>
+ <div class="page" id="results">
+ <h1>Результаты тестов</h1>
+ <div class="results-filter">
+ <label for="test-filter">Фильтр по тесту:</label>
+ <select id="test-filter" onchange="renderResults()">
+ <option value="">Все тесты</option>
+ </select>
+ </div>
+ <table class="results-table">
+ <thead>
+ <tr>
+ <th>Ученик</th>
+ <th>Тест</th>
+ <th>Баллы</th>
+ <th>Процент</th>
+ <th>Дата</th>
+ </tr>
+ </thead>
+ <tbody id="results-body"></tbody>
+ </table>
+ <button class="action-btn clear-results" onclick="clearResults()"><i class="fas fa-trash"></i> Очистить результаты</button>
+ </div>
+ </div>
 
-    <div class="modal" id="modal" style="display: none;">
-        <div class="modal-content">
-            <h2 id="modal-title"></h2>
-            <p id="modal-message"></p>
-            <div id="modal-input" style="display: none;">
-                <input type="text" id="modal-text-input" placeholder="Введите текст">
-            </div>
-            <div class="modal-buttons"></div>
-        </div>
-    </div>
+ <div class="modal" id="modal" style="display: none;">
+ <div class="modal-content">
+ <h2 id="modal-title"></h2>
+ <p id="modal-message"></p>
+ <div id="modal-input" style="display: none;">
+ <input type="text" id="modal-text-input" placeholder="Введите текст">
+ </div>
+ <div class="modal-buttons"></div>
+ </div>
+ </div>
 
-    <script>
-        let serverTests = [];
-        let currentTest = null;
-        let currentQuestion = 0;
-        let timer = null;
-        let answers = [];
-        let score = 0;
-        let totalQuestions = 0;
-        let studentName = '';
+ <script>
+ // Инициализация Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAWcq5Wr7vfi6zrWYUFT7_nGyKundAiYhE",
+  authDomain: "testplatform-64418.firebaseapp.com",
+  projectId: "testplatform-64418",
+  storageBucket: "testplatform-64418.firebasestorage.app",
+  messagingSenderId: "494067364117",
+  appId: "1:494067364117:web:85042a540bd85ce75db91c"
+};
+ firebase.initializeApp(firebaseConfig);
+ const db = firebase.firestore();
 
-        // Настройки
-        const allowSkipQuestions = false; // Запретить переход без сохранения ответа
-        const allowOverwriteAnswers = false; // Запретить пересохранение ответов
-        const imagePath = './'; // Путь к изображениям в корне репозитория
+ let serverTests = [];
+ let currentTest = null;
+ let currentQuestion = 0;
+ let timer = null;
+ let answers = [];
+ let score = 0;
+ let totalQuestions = 0;
+ let studentName = '';
 
-        // Переключение темы
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            document.querySelector('header').classList.toggle('dark');
-            document.querySelectorAll('.card').forEach(card => card.classList.toggle('dark'));
-            const toggle = document.querySelector('.theme-toggle i');
-            toggle.classList.toggle('fa-moon');
-            toggle.classList.toggle('fa-sun');
-        }
+ // Настройки
+ const allowSkipQuestions = false; // Запретить переход без сохранения ответа
+ const allowOverwriteAnswers = false; // Запретить пересохранение ответов
+ const imagePath = './'; // Путь к изображениям в корне репозитория
 
-        // Переключение навигационного меню
-        function toggleNav() {
-            document.querySelector('.nav-menu').classList.toggle('active');
-        }
+ // Переключение темы
+ function toggleTheme() {
+ document.body.classList.toggle('dark');
+ document.querySelector('header').classList.toggle('dark');
+ document.querySelectorAll('.card').forEach(card => card.classList.toggle('dark'));
+ const toggle = document.querySelector('.theme-toggle i');
+ toggle.classList.toggle('fa-moon');
+ toggle.classList.toggle('fa-sun');
+ }
 
-        // Переключение страниц
-        function switchPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            if (pageId === 'take') loadTests();
-            if (pageId === 'results') renderResults();
-            document.querySelector('.nav-menu').classList.remove('active');
-        }
+ // Переключение навигационного меню
+ function toggleNav() {
+ document.querySelector('.nav-menu').classList.toggle('active');
+ }
 
-        // Модальное окно
-        function showModal({ title, message, buttons, showInput = false, inputPlaceholder = '' }) {
-            const modal = document.getElementById('modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalMessage = document.getElementById('modal-message');
-            const modalInput = document.getElementById('modal-input');
-            const modalTextInput = document.getElementById('modal-text-input');
-            const modalButtons = document.querySelector('.modal-buttons');
+ // Переключение страниц
+ function switchPage(pageId) {
+ document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+ document.getElementById(pageId).classList.add('active');
+ if (pageId === 'take') loadTests();
+ if (pageId === 'results') renderResults();
+ document.querySelector('.nav-menu').classList.remove('active');
+ }
 
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modalButtons.innerHTML = '';
+ // Модальное окно
+ function showModal({ title, message, buttons, showInput = false, inputPlaceholder = '' }) {
+ const modal = document.getElementById('modal');
+ const modalTitle = document.getElementById('modal-title');
+ const modalMessage = document.getElementById('modal-message');
+ const modalInput = document.getElementById('modal-input');
+ const modalTextInput = document.getElementById('modal-text-input');
+ const modalButtons = document.querySelector('.modal-buttons');
 
-            if (showInput) {
-                modalInput.style.display = 'block';
-                modalTextInput.value = '';
-                modalTextInput.placeholder = inputPlaceholder;
-            } else {
-                modalInput.style.display = 'none';
-            }
+ modalTitle.textContent = title;
+ modalMessage.textContent = message;
+ modalButtons.innerHTML = '';
 
-            buttons.forEach(({ text, action, className }) => {
-                const button = document.createElement('button');
-                button.textContent = text;
-                button.className = className || '';
-                button.onclick = () => {
-                    modal.style.display = 'none';
-                    if (action) {
-                        const inputValue = showInput ? modalTextInput.value : null;
-                        action(inputValue);
-                    }
-                };
-                modalButtons.appendChild(button);
-            });
+ if (showInput) {
+ modalInput.style.display = 'block';
+ modalTextInput.value = '';
+ modalTextInput.placeholder = inputPlaceholder;
+ } else {
+ modalInput.style.display = 'none';
+ }
 
-            modal.style.display = 'flex';
-            modalTextInput.focus();
-        }
+ buttons.forEach(({ text, action, className }) => {
+ const button = document.createElement('button');
+ button.textContent = text;
+ button.className = className || '';
+ button.onclick = () => {
+ modal.style.display = 'none';
+ if (action) {
+ const inputValue = showInput ? modalTextInput.value : null;
+ action(inputValue);
+ }
+ };
+ modalButtons.appendChild(button);
+ });
 
-        // Закрытие модального окна при клике вне контента
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                e.currentTarget.style.display = 'none';
-            }
-        });
+ modal.style.display = 'flex';
+ modalTextInput.focus();
+ }
 
-        // Загрузка тестов
-        async function loadTests() {
-            try {
-                const response = await fetch('tests.json');
-                serverTests = await response.json();
-                renderTestList();
-                // Обновляем фильтр на странице результатов
-                const testFilter = document.getElementById('test-filter');
-                testFilter.innerHTML = '<option value="">Все тесты</option>';
-                serverTests.forEach(test => {
-                    const option = document.createElement('option');
-                    option.value = test.title;
-                    option.textContent = test.title;
-                    testFilter.appendChild(option);
-                });
-            } catch (e) {
-                console.error('Ошибка загрузки тестов:', e);
-                showModal({
-                    title: 'Ошибка',
-                    message: 'Не удалось загрузить тесты. Попробуйте позже.',
-                    buttons: [{ text: 'ОК', action: () => {} }]
-                });
-            }
-        }
+ // Закрытие модального окна при клике вне контента
+ document.getElementById('modal').addEventListener('click', (e) => {
+ if (e.target === e.currentTarget) {
+ e.currentTarget.style.display = 'none';
+ }
+ });
 
-        // Рендеринг списка тестов
-        function renderTestList() {
-            const testList = document.querySelector('.test-list');
-            testList.innerHTML = '';
-            document.querySelector('.test-content').style.display = 'none';
-            document.querySelector('.test-list').style.display = 'block';
-            serverTests.forEach((test, index) => {
-                const testItem = document.createElement('div');
-                testItem.className = 'test-item card';
-                testItem.innerHTML = `
-                    <span>${test.title}</span>
-                    <a class="test-link" onclick="promptStudentName(${index})">Начать</a>
-                `;
-                testList.appendChild(testItem);
-            });
-        }
+ // Загрузка тестов
+ async function loadTests() {
+ try {
+ const response = await fetch('tests.json');
+ serverTests = await response.json();
+ renderTestList();
+ // Обновляем фильтр на странице результатов
+ const testFilter = document.getElementById('test-filter');
+ testFilter.innerHTML = '<option value="">Все тесты</option>';
+ serverTests.forEach(test => {
+ const option = document.createElement('option');
+ option.value = test.title;
+ option.textContent = test.title;
+ testFilter.appendChild(option);
+ });
+ } catch (e) {
+ console.error('Ошибка загрузки тестов:', e);
+ showModal({
+ title: 'Ошибка',
+ message: 'Не удалось загрузить тесты. Попробуйте позже.',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ }
+ }
 
-        // Запрос имени ученика
-        function promptStudentName(index) {
-            showModal({
-                title: 'Введите имя',
-                message: 'Пожалуйста, введите ваше имя перед началом теста.',
-                showInput: true,
-                inputPlaceholder: 'Имя ученика',
-                buttons: [
-                    {
-                        text: 'Начать тест',
-                        action: (name) => {
-                            if (name && name.trim()) {
-                                studentName = name.trim();
-                                document.getElementById('student-name').textContent = `Ученик: ${studentName}`;
-                                startTest(index);
-                            } else {
-                                showModal({
-                                    title: 'Ошибка',
-                                    message: 'Имя не может быть пустым!',
-                                    buttons: [{ text: 'ОК', action: () => promptStudentName(index) }]
-                                });
-                            }
-                        },
-                        className: 'modal-confirm'
-                    },
-                    { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
-                ]
-            });
-        }
+ // Рендеринг списка тестов
+ function renderTestList() {
+ const testList = document.querySelector('.test-list');
+ testList.innerHTML = '';
+ document.querySelector('.test-content').style.display = 'none';
+ document.querySelector('.test-list').style.display = 'block';
+ serverTests.forEach((test, index) => {
+ const testItem = document.createElement('div');
+ testItem.className = 'test-item card';
+ testItem.innerHTML = `
+ <span>${test.title}</span>
+ <a class="test-link" onclick="promptStudentName(${index})">Начать</a>
+ `;
+ testList.appendChild(testItem);
+ });
+ }
 
-        // Начало теста
-        function startTest(index) {
-            currentTest = serverTests[index];
-            currentQuestion = 0;
-            score = 0;
-            totalQuestions = currentTest.questions.length;
-            answers = new Array(totalQuestions).fill(null);
-            document.querySelector('.test-list').style.display = 'none';
-            document.querySelector('.test-content').style.display = 'block';
-            document.querySelector('.test-questions').style.display = 'block';
-            document.querySelector('.test-results').style.display = 'none';
-            updateProgressBar();
-            loadQuestion();
-            startTimer();
-        }
+ // Запрос имени ученика
+ function promptStudentName(index) {
+ showModal({
+ title: 'Введите имя',
+ message: 'Пожалуйста, введите ваше имя перед началом теста.',
+ showInput: true,
+ inputPlaceholder: 'Имя ученика',
+ buttons: [
+ {
+ text: 'Начать тест',
+ action: (name) => {
+ if (name && name.trim()) {
+ studentName = name.trim();
+ document.getElementById('student-name').textContent = `Ученик: ${studentName}`;
+ startTest(index);
+ } else {
+ showModal({
+ title: 'Ошибка',
+ message: 'Имя не может быть пустым!',
+ buttons: [{ text: 'ОК', action: () => promptStudentName(index) }]
+ });
+ }
+ },
+ className: 'modal-confirm'
+ },
+ { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
+ ]
+ });
+ }
 
-        // Загрузка вопроса
-        function loadQuestion() {
-            const question = currentTest.questions[currentQuestion];
-            const questionDiv = document.querySelector('.question');
-            const questionNumberDiv = document.querySelector('.question-number');
-            questionNumberDiv.textContent = `Вопрос ${currentQuestion + 1} из ${totalQuestions}`;
-            questionNumberDiv.classList.toggle('answered', answers[currentQuestion] !== null);
-            questionDiv.innerHTML = '';
-            if (question.text.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                const img = document.createElement('img');
-                img.src = imagePath + question.text;
-                img.className = 'question-image';
-                img.onerror = () => {
-                    const errorText = document.createElement('p');
-                    errorText.textContent = 'Изображение не найдено';
-                    errorText.style.color = 'var(--error)';
-                    questionDiv.innerHTML = '';
-                    questionDiv.appendChild(errorText);
-                };
-                questionDiv.appendChild(img);
-            } else {
-                const p = document.createElement('p');
-                p.textContent = question.text;
-                questionDiv.appendChild(p);
-            }
-            if (question.type === 'multiple') {
-                question.options.forEach((option, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'answer-option';
-                    const checked = answers[currentQuestion] === i ? 'checked' : '';
-                    div.innerHTML = `<input type="radio" name="answer" value="${i}" ${checked}>${option}`;
-                    div.addEventListener('click', () => {
-                        const radio = div.querySelector('input[type="radio"]');
-                        radio.checked = true;
-                    });
-                    questionDiv.appendChild(div);
-                });
-            } else {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.id = 'text-answer';
-                input.value = answers[currentQuestion] || '';
-                input.setAttribute('autocomplete', 'off');
-                questionDiv.appendChild(input);
-                const p = document.createElement('p');
-                p.textContent = question.instruction;
-                questionDiv.appendChild(p);
-            }
-            const saveButton = document.getElementById('save-answer');
-            if (!allowOverwriteAnswers && answers[currentQuestion] !== null) {
-                saveButton.textContent = 'На вопрос уже дан ответ';
-                saveButton.disabled = true;
-                saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
-            } else {
-                saveButton.textContent = 'Сохранить ответ';
-                saveButton.disabled = false;
-                saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
-            }
-            const prevButton = document.querySelector('.prev-btn');
-            const nextButton = document.querySelector('.next-btn');
-            prevButton.style.display = currentQuestion === 0 ? 'none' : 'inline-flex';
-            nextButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
-            questionDiv.style.animation = 'fadeIn 0.5s ease';
-        }
+ // Начало теста
+ function startTest(index) {
+ currentTest = serverTests[index];
+ currentQuestion = 0;
+ score = 0;
+ totalQuestions = currentTest.questions.length;
+ answers = new Array(totalQuestions).fill(null);
+ document.querySelector('.test-list').style.display = 'none';
+ document.querySelector('.test-content').style.display = 'block';
+ document.querySelector('.test-questions').style.display = 'block';
+ document.querySelector('.test-results').style.display = 'none';
+ updateProgressBar();
+ loadQuestion();
+ startTimer();
+ }
 
-        // Обновление прогресс-бара
-        function updateProgressBar() {
-            const progress = document.querySelector('.progress');
-            const percentage = ((currentQuestion + 1) / totalQuestions) * 100;
-            progress.style.width = `${percentage}%`;
-        }
+ // Загрузка вопроса
+ function loadQuestion() {
+ const question = currentTest.questions[currentQuestion];
+ const questionDiv = document.querySelector('.question');
+ const questionNumberDiv = document.querySelector('.question-number');
+ questionNumberDiv.textContent = `Вопрос ${currentQuestion + 1} из ${totalQuestions}`;
+ questionNumberDiv.classList.toggle('answered', answers[currentQuestion] !== null);
+ questionDiv.innerHTML = '';
+ if (question.text.match(/\.(jpg|jpeg|png|gif)$/i)) {
+ const img = document.createElement('img');
+ img.src = imagePath + question.text;
+ img.className = 'question-image';
+ img.onerror = () => {
+ const errorText = document.createElement('p');
+ errorText.textContent = 'Изображение не найдено';
+ errorText.style.color = 'var(--error)';
+ questionDiv.innerHTML = '';
+ questionDiv.appendChild(errorText);
+ };
+ questionDiv.appendChild(img);
+ } else {
+ const p = document.createElement('p');
+ p.textContent = question.text;
+ questionDiv.appendChild(p);
+ }
+ if (question.type === 'multiple') {
+ question.options.forEach((option, i) => {
+ const div = document.createElement('div');
+ div.className = 'answer-option';
+ const checked = answers[currentQuestion] === i ? 'checked' : '';
+ div.innerHTML = `<input type="radio" name="answer" value="${i}" ${checked}>${option}`;
+ div.addEventListener('click', () => {
+ const radio = div.querySelector('input[type="radio"]');
+ radio.checked = true;
+ });
+ questionDiv.appendChild(div);
+ });
+ } else {
+ const input = document.createElement('input');
+ input.type = 'text';
+ input.id = 'text-answer';
+ input.value = answers[currentQuestion] || '';
+ input.setAttribute('autocomplete', 'off');
+ questionDiv.appendChild(input);
+ const p = document.createElement('p');
+ p.textContent = question.instruction;
+ questionDiv.appendChild(p);
+ }
+ const saveButton = document.getElementById('save-answer');
+ if (!allowOverwriteAnswers && answers[currentQuestion] !== null) {
+ saveButton.textContent = 'На вопрос уже дан ответ';
+ saveButton.disabled = true;
+ saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
+ } else {
+ saveButton.textContent = 'Сохранить ответ';
+ saveButton.disabled = false;
+ saveButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
+ }
+ const prevButton = document.querySelector('.prev-btn');
+ const nextButton = document.querySelector('.next-btn');
+ prevButton.style.display = currentQuestion === 0 ? 'none' : 'inline-flex';
+ nextButton.style.display = currentQuestion === totalQuestions - 1 ? 'none' : 'inline-flex';
+ questionDiv.style.animation = 'fadeIn 0.5s ease';
+ }
 
-        // Таймер для всего теста
-        function startTimer() {
-            clearInterval(timer);
-            const time = currentTest.time;
-            if (!time) {
-                document.querySelector('.timer').textContent = '';
-                return;
-            }
-            let seconds = time;
-            document.querySelector('.timer').textContent = `Осталось: ${seconds} сек`;
-            timer = setInterval(() => {
-                seconds--;
-                document.querySelector('.timer').textContent = `Осталось: ${seconds} сек`;
-                if (seconds <= 0) {
-                    clearInterval(timer);
-                    calculateScore();
-                    saveResults();
-                    document.querySelector('.test-questions').style.display = 'none';
-                    document.querySelector('.test-results').style.display = 'block';
-                    document.getElementById('score').textContent = score;
-                    document.getElementById('total').textContent = totalQuestions;
-                    const percentage = Math.round((score / totalQuestions) * 100);
-                    document.getElementById('percentage').textContent = percentage + '%';
-                    showModal({
-                        title: 'Время истекло',
-                        message: 'Время теста истекло! Ваш результат сохранен.',
-                        buttons: [{ text: 'ОК', action: () => {} }]
-                    });
-                }
-            }, 1000);
-        }
+ // Обновление прогресс-бара
+ function updateProgressBar() {
+ const progress = document.querySelector('.progress');
+ const percentage = ((currentQuestion + 1) / totalQuestions) * 100;
+ progress.style.width = `${percentage}%`;
+ }
 
-        // Сохранение ответа
-        function saveAnswer() {
-            const question = currentTest.questions[currentQuestion];
-            if (question.type === 'multiple') {
-                const selected = document.querySelector('input[name="answer"]:checked');
-                if (!selected) {
-                    showModal({
-                        title: 'Ошибка',
-                        message: 'Пожалуйста, выберите ответ!',
-                        buttons: [{ text: 'ОК', action: () => {} }]
-                    });
-                    return;
-                }
-                answers[currentQuestion] = parseInt(selected.value);
-            } else {
-                const answer = document.getElementById('text-answer').value;
-                if (!answer.trim()) {
-                    showModal({
-                        title: 'Ошибка',
-                        message: 'Пожалуйста, введите ответ!',
-                        buttons: [{ text: 'ОК', action: () => {} }]
-                    });
-                    return;
-                }
-                answers[currentQuestion] = answer;
-            }
-            nextQuestion();
-        }
+ // Таймер для всего теста
+ function startTimer() {
+ clearInterval(timer);
+ const time = currentTest.time;
+ if (!time) {
+ document.querySelector('.timer').textContent = '';
+ return;
+ }
+ let seconds = time;
+ document.querySelector('.timer').textContent = `Осталось: ${seconds} сек`;
+ timer = setInterval(() => {
+ seconds--;
+ document.querySelector('.timer').textContent = `Осталось: ${seconds} сек`;
+ if (seconds <= 0) {
+ clearInterval(timer);
+ calculateScore();
+ saveResults();
+ document.querySelector('.test-questions').style.display = 'none';
+ document.querySelector('.test-results').style.display = 'block';
+ document.getElementById('score').textContent = score;
+ document.getElementById('total').textContent = totalQuestions;
+ const percentage = Math.round((score / totalQuestions) * 100);
+ document.getElementById('percentage').textContent = percentage + '%';
+ showModal({
+ title: 'Время истекло',
+ message: 'Время теста истекло! Ваш результат сохранен.',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ }
+ }, 1000);
+ }
 
-        // Переход к предыдущему вопросу
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                updateProgressBar();
-                loadQuestion();
-            }
-        }
+ // Сохранение ответа
+ function saveAnswer() {
+ const question = currentTest.questions[currentQuestion];
+ if (question.type === 'multiple') {
+ const selected = document.querySelector('input[name="answer"]:checked');
+ if (!selected) {
+ showModal({
+ title: 'Ошибка',
+ message: 'Пожалуйста, выберите ответ!',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ return;
+ }
+ answers[currentQuestion] = parseInt(selected.value);
+ } else {
+ const answer = document.getElementById('text-answer').value;
+ if (!answer.trim()) {
+ showModal({
+ title: 'Ошибка',
+ message: 'Пожалуйста, введите ответ!',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ return;
+ }
+ answers[currentQuestion] = answer;
+ }
+ nextQuestion();
+ }
 
-        // Переход к следующему вопросу
-        function nextQuestion() {
-            if (answers[currentQuestion] === null) {
-                if (!allowSkipQuestions) {
-                    showModal({
-                        title: 'Несохраненный ответ',
-                        message: 'Вы не сохранили ответ. Пожалуйста, сохраните ответ перед переходом!',
-                        buttons: [{ text: 'ОК', action: () => {} }]
-                    });
-                    return;
-                } else {
-                    showModal({
-                        title: 'Несохраненный ответ',
-                        message: 'Вы не сохранили ответ. Хотите сохранить перед переходом?',
-                        buttons: [
-                            { text: 'Сохранить', action: () => saveAnswer(), className: 'modal-save' },
-                            { text: 'Продолжить без сохранения', action: () => {
-                                currentQuestion++;
-                                if (currentQuestion >= totalQuestions) {
-                                    finishTest();
-                                    return;
-                                }
-                                updateProgressBar();
-                                loadQuestion();
-                            }, className: 'modal-continue' }
-                        ]
-                    });
-                    return;
-                }
-            }
-            currentQuestion++;
-            if (currentQuestion >= totalQuestions) {
-                finishTest();
-                return;
-            }
-            updateProgressBar();
-            loadQuestion();
-        }
+ // Переход к предыдущему вопросу
+ function prevQuestion() {
+ if (currentQuestion > 0) {
+ currentQuestion--;
+ updateProgressBar();
+ loadQuestion();
+ }
+ }
 
-        // Завершение тестирования
-        function finishTest() {
-            showModal({
-                title: 'Подтверждение',
-                message: 'Введите "finish", чтобы подтвердить завершение теста',
-                showInput: true,
-                inputPlaceholder: 'Введите finish',
-                buttons: [
-                    { text: 'Подтвердить', action: (input) => {
-                        if (input && input.toLowerCase() === 'finish') {
-                            if (currentQuestion === totalQuestions - 1 && answers[currentQuestion] === null) {
-                                const question = currentTest.questions[currentQuestion];
-                                if (question.type === 'multiple') {
-                                    const selected = document.querySelector('input[name="answer"]:checked');
-                                    if (selected) {
-                                        answers[currentQuestion] = parseInt(selected.value);
-                                    }
-                                } else {
-                                    const answer = document.getElementById('text-answer').value;
-                                    if (answer.trim()) {
-                                        answers[currentQuestion] = answer;
-                                    }
-                                }
-                            }
-                            clearInterval(timer);
-                            calculateScore();
-                            saveResults();
-                            document.querySelector('.test-questions').style.display = 'none';
-                            document.querySelector('.test-results').style.display = 'block';
-                            document.getElementById('score').textContent = score;
-                            document.getElementById('total').textContent = totalQuestions;
-                            const percentage = Math.round((score / totalQuestions) * 100);
-                            document.getElementById('percentage').textContent = percentage + '%';
-                        } else {
-                            showModal({
-                                title: 'Ошибка',
-                                message: 'Завершение теста отменено. Введите "finish" для подтверждения.',
-                                buttons: [{ text: 'ОК', action: () => {} }]
-                            });
-                        }
-                    }, className: 'modal-confirm' },
-                    { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
-                ]
-            });
-        }
+ // Переход к следующему вопросу
+ function nextQuestion() {
+ if (answers[currentQuestion] === null) {
+ if (!allowSkipQuestions) {
+ showModal({
+ title: 'Несохраненный ответ',
+ message: 'Вы не сохранили ответ. Пожалуйста, сохраните ответ перед переходом!',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ return;
+ } else {
+ showModal({
+ title: 'Несохраненный ответ',
+ message: 'Вы не сохранили ответ. Хотите сохранить перед переходом?',
+ buttons: [
+ { text: 'Сохранить', action: () => saveAnswer(), className: 'modal-save' },
+ { text: 'Продолжить без сохранения', action: () => {
+ currentQuestion++;
+ if (currentQuestion >= totalQuestions) {
+ finishTest();
+ return;
+ }
+ updateProgressBar();
+ loadQuestion();
+ }, className: 'modal-continue' }
+ ]
+ });
+ return;
+ }
+ }
+ currentQuestion++;
+ if (currentQuestion >= totalQuestions) {
+ finishTest();
+ return;
+ }
+ updateProgressBar();
+ loadQuestion();
+ }
 
-        // Подсчет баллов
-        function calculateScore() {
-            score = 0;
-            currentTest.questions.forEach((question, index) => {
-                if (question.type === 'multiple') {
-                    if (answers[index] === question.correct) {
-                        score++;
-                    }
-                } else {
-                    if (answers[index] && answers[index].toLowerCase() === question.correct.toLowerCase()) {
-                        score++;
-                    }
-                }
-            });
-        }
+ // Завершение тестирования
+ function finishTest() {
+ showModal({
+ title: 'Подтверждение',
+ message: 'Введите "finish", чтобы подтвердить завершение теста',
+ showInput: true,
+ inputPlaceholder: 'Введите finish',
+ buttons: [
+ { text: 'Подтвердить', action: (input) => {
+ if (input && input.toLowerCase() === 'finish') {
+ if (currentQuestion === totalQuestions - 1 && answers[currentQuestion] === null) {
+ const question = currentTest.questions[currentQuestion];
+ if (question.type === 'multiple') {
+ const selected = document.querySelector('input[name="answer"]:checked');
+ if (selected) {
+ answers[currentQuestion] = parseInt(selected.value);
+ }
+ } else {
+ const answer = document.getElementById('text-answer').value;
+ if (answer.trim()) {
+ answers[currentQuestion] = answer;
+ }
+ }
+ }
+ clearInterval(timer);
+ calculateScore();
+ saveResults();
+ document.querySelector('.test-questions').style.display = 'none';
+ document.querySelector('.test-results').style.display = 'block';
+ document.getElementById('score').textContent = score;
+ document.getElementById('total').textContent = totalQuestions;
+ const percentage = Math.round((score / totalQuestions) * 100);
+ document.getElementById('percentage').textContent = percentage + '%';
+ } else {
+ showModal({
+ title: 'Ошибка',
+ message: 'Завершение теста отменено. Введите "finish" для подтверждения.',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ }
+ }, className: 'modal-confirm' },
+ { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
+ ]
+ });
+ }
 
-        // Сохранение результатов в localStorage
-        function saveResults() {
-            const percentage = Math.round((score / totalQuestions) * 100);
-            const result = {
-                student: studentName,
-                test: currentTest.title,
-                score: score,
-                total: totalQuestions,
-                percentage: percentage,
-                date: new Date().toLocaleString('ru-RU')
-            };
-            let results = JSON.parse(localStorage.getItem('testResults') || '[]');
-            results.push(result);
-            localStorage.setItem('testResults', JSON.stringify(results));
-        }
+ // Подсчет баллов
+ function calculateScore() {
+ score = 0;
+ currentTest.questions.forEach((question, index) => {
+ if (question.type === 'multiple') {
+ if (answers[index] === question.correct) {
+ score++;
+ }
+ } else {
+ if (answers[index] && answers[index].toLowerCase() === question.correct.toLowerCase()) {
+ score++;
+ }
+ }
+ });
+ }
 
-        // Рендеринг таблицы результатов
-        function renderResults() {
-            const resultsBody = document.getElementById('results-body');
-            const testFilter = document.getElementById('test-filter').value;
-            resultsBody.innerHTML = '';
-            let results = JSON.parse(localStorage.getItem('testResults') || '[]');
-            if (testFilter) {
-                results = results.filter(result => result.test === testFilter);
-            }
-            if (results.length === 0) {
-                resultsBody.innerHTML = '<tr><td colspan="5">Нет результатов</td></tr>';
-                return;
-            }
-            results.forEach(result => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${result.student}</td>
-                    <td>${result.test}</td>
-                    <td>${result.score}/${result.total}</td>
-                    <td>${result.percentage}%</td>
-                    <td>${result.date}</td>
-                `;
-                resultsBody.appendChild(row);
-            });
-        }
+ // Сохранение результатов в Firestore
+ async function saveResults() {
+ try {
+ const percentage = Math.round((score / totalQuestions) * 100);
+ await db.collection('results').add({
+ student: studentName,
+ test: currentTest.title,
+ score: score,
+ total: totalQuestions,
+ percentage: percentage,
+ date: firebase.firestore.Timestamp.fromDate(new Date())
+ });
+ } catch (e) {
+ console.error('Ошибка сохранения результатов:', e);
+ showModal({
+ title: 'Ошибка',
+ message: 'Не удалось сохранить результаты. Попробуйте снова.',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ }
+ }
 
-        // Очистка результатов
-        function clearResults() {
-            showModal({
-                title: 'Подтверждение',
-                message: 'Вы уверены, что хотите очистить все результаты?',
-                buttons: [
-                    {
-                        text: 'Очистить',
-                        action: () => {
-                            localStorage.removeItem('testResults');
-                            renderResults();
-                            showModal({
-                                title: 'Успех',
-                                message: 'Результаты очищены!',
-                                buttons: [{ text: 'ОК', action: () => {} }]
-                            });
-                        },
-                        className: 'modal-confirm'
-                    },
-                    { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
-                ]
-            });
-        }
+ // Рендеринг таблицы результатов
+ async function renderResults() {
+ try {
+ const resultsBody = document.getElementById('results-body');
+ const testFilter = document.getElementById('test-filter').value;
+ resultsBody.innerHTML = '';
+ let query = db.collection('results').orderBy('date', 'desc');
+ if (testFilter) {
+ query = query.where('test', '==', testFilter);
+ }
+ const snapshot = await query.get();
+ if (snapshot.empty) {
+ resultsBody.innerHTML = '<tr><td colspan="5">Нет результатов</td></tr>';
+ return;
+ }
+ snapshot.forEach(doc => {
+ const result = doc.data();
+ const row = document.createElement('tr');
+ row.innerHTML = `
+ <td>${result.student}</td>
+ <td>${result.test}</td>
+ <td>${result.score}/${result.total}</td>
+ <td>${result.percentage}%</td>
+ <td>${result.date.toDate().toLocaleString('ru-RU')}</td>
+ `;
+ resultsBody.appendChild(row);
+ });
+ } catch (e) {
+ console.error('Ошибка загрузки результатов:', e);
+ showModal({
+ title: 'Ошибка',
+ message: 'Не удалось загрузить результаты. Попробуйте снова.',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ }
+ }
 
-        // Инициализация
-        loadTests();
-    </script>
+ // Очистка результатов
+ async function clearResults() {
+ showModal({
+ title: 'Подтверждение',
+ message: 'Вы уверены, что хотите очистить все результаты?',
+ buttons: [
+ {
+ text: 'Очистить',
+ action: async () => {
+ try {
+ const snapshot = await db.collection('results').get();
+ const batch = db.batch();
+ snapshot.forEach(doc => {
+ batch.delete(doc.ref);
+ });
+ await batch.commit();
+ renderResults();
+ showModal({
+ title: 'Успех',
+ message: 'Результаты очищены!',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ } catch (e) {
+ console.error('Ошибка очистки результатов:', e);
+ showModal({
+ title: 'Ошибка',
+ message: 'Не удалось очистить результаты. Попробуйте снова.',
+ buttons: [{ text: 'ОК', action: () => {} }]
+ });
+ }
+ },
+ className: 'modal-confirm'
+ },
+ { text: 'Отмена', action: () => {}, className: 'modal-cancel' }
+ ]
+ });
+ }
+
+ // Инициализация
+ loadTests();
+ </script>
 </body>
 </html>
